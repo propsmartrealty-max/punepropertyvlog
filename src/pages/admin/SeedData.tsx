@@ -512,9 +512,20 @@ const SeedData = () => {
 
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 flex gap-3">
                         <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                        <p className="text-sm text-amber-800">
-                            <strong>Warning:</strong> This process performs many API calls. If the AI limit is reached, it will seamlessly fall back to high-quality Mock Data so your seeding always succeeds.
-                        </p>
+                        <div className="text-sm text-amber-800">
+                            <p className="font-bold">Diagnostics:</p>
+                            <ul className="list-disc ml-4 mt-1 space-y-1">
+                                <li>
+                                    Supabase Connection: {import.meta.env.VITE_SUPABASE_URL && !import.meta.env.VITE_SUPABASE_URL.includes('placeholder') ? '✅ Connected' : '❌ MISSING (Check Vercel Env Vars)'}
+                                </li>
+                                <li>
+                                    Google Gemini AI: {import.meta.env.VITE_GEMINI_API_KEY ? '✅ Active' : '⚠️ Missing (Will use Mock Data)'}
+                                </li>
+                            </ul>
+                            <p className="mt-2 text-xs opacity-75">
+                                If Supabase is missing, data <strong>will not save</strong>. Go to Vercel Settings &gt; Environment Variables and add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.
+                            </p>
+                        </div>
                     </div>
 
                     <button
