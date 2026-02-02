@@ -450,7 +450,8 @@ const SeedData = () => {
                                 specs: [],
                                 // High-Tech Metadata Mapping
                                 reraId: projData.reraId || 'Pending RERA',
-                                exactPrice: projData.exactPrice || undefined,
+                                exactPrice: projData.exactPrice || 0,
+                                priceType: 'L' as 'L' | 'Cr', // Force explicit type
                                 seoKeywords: projData.seoKeywords || [`${projSeed.name} pune`, `${seedType} in ${seedLocation}`, 'luxury homes pune'],
                                 metaDescription: projData.metaDescription || `Explore ${projSeed.name} in ${seedLocation}. Premium ${seedType} offering world-class amenities.`,
                                 configurationDetails: projData.configurationDetails || []
