@@ -356,9 +356,11 @@ const SeedData = () => {
             log("🚀 Starting Seeding Process...");
 
             // DIAGNOSTICS: Check if Env Vars are loaded
-            const sbUrl = import.meta.env.VITE_SUPABASE_URL || 'MISSING';
-            log(`🔎 Connection Check: ${sbUrl.includes('placeholder') ? '❌ USING PLACEHOLDER (Bad)' : '✅ Using Real URL'}`);
-            log(`🔎 URL prefix: ${sbUrl.substring(0, 12)}...`);
+            const sbUrl = import.meta.env.VITE_SUPABASE_URL || '';
+            const isPlaceholder = sbUrl.includes('placeholder') || sbUrl === '' || sbUrl === 'MISSING';
+
+            log(`🔎 Connection Check: ${isPlaceholder ? '❌ FAILED (Missing Key)' : '✅ Using Real URL'}`);
+            log(`🔎 URL Value: ${sbUrl ? sbUrl.substring(0, 15) + '...' : 'EMPTY'}`);
 
             const totalSteps = SEED_DATA.length + SEED_DATA.reduce((acc, b) => acc + b.projects.length, 0);
             let currentStep = 0;
