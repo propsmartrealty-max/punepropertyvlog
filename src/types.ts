@@ -75,7 +75,8 @@ export interface Project {
   masterLayout?: string;
   floorPlans?: string[];
   logo?: string;
-  exactPrice?: string;
+  exactPrice?: string; // Kept as string to match existing usage, or number? The error said number but file had string. Let's check usage.
+  priceType?: 'L' | 'Cr' | 'K';
   reraId?: string;
   seoKeywords?: string[]; // High-ranking keywords for Google SERP
   metaDescription?: string; // Optimized meta description for CTR
