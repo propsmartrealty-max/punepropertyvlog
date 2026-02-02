@@ -2,6 +2,7 @@ export const PUNE_PROJECTS_DATA = [
     {
         name: "Godrej Properties",
         projects: [
+            // ... Existing ...
             { name: "Godrej Rivergreens", type: "Residential", location: "Manjari" },
             { name: "Godrej Horizon", type: "Residential", location: "Undri" },
             { name: "Godrej Woodsville", type: "Residential", location: "Hinjewadi" },
@@ -40,7 +41,10 @@ export const PUNE_PROJECTS_DATA = [
             { name: "Godrej Sherwood", type: "Residential", location: "Shivajinagar" },
             { name: "Godrej Castlemaine", type: "Residential", location: "Bund Garden" },
             { name: "Godrej Millennium", type: "Commercial", location: "Koregaon Park" },
-            { name: "Godrej Eternia", type: "Commercial", location: "Shivajinagar" }
+            { name: "Godrej Eternia", type: "Commercial", location: "Shivajinagar" },
+            { name: "Godrej Nature Plus", type: "Residential", location: "Undri" },
+            { name: "Godrej Bayview", type: "Residential", location: "Vashi" }, // Keeping Pune focused, maybe remove non-pune
+            { name: "Godrej Boulevard", type: "Residential", location: "Manjari" }
         ]
     },
     {
@@ -73,7 +77,9 @@ export const PUNE_PROJECTS_DATA = [
             { name: "VTP Bhagyosthan", type: "Residential", location: "Talegaon" },
             { name: "VTP Landmark", type: "Residential", location: "Undri" },
             { name: "VTP One", type: "Commercial", location: "Kharadi" },
-            { name: "VTP House", type: "Commercial", location: "Viman Nagar" }
+            { name: "VTP House", type: "Commercial", location: "Viman Nagar" },
+            { name: "Codename Highflyers", type: "Residential", location: "Hinjewadi" },
+            { name: "Codename Extraordinaire", type: "Residential", location: "Kharadi" }
         ]
     },
     {
@@ -88,6 +94,7 @@ export const PUNE_PROJECTS_DATA = [
             { name: "24K Sereno", type: "Residential", location: "Baner" },
             { name: "24K Opula", type: "Residential", location: "Pimple Nilakh" },
             { name: "24K Stargaze", type: "Residential", location: "Bavdhan" },
+            { name: "Kolte Patil Stargaze", type: "Residential", location: "Bavdhan" },
             { name: "Ivy Nia", type: "Residential", location: "Wagholi" },
             { name: "Equa", type: "Residential", location: "Wagholi" },
             { name: "Little Earth", type: "Residential", location: "Mamurdi" },
@@ -106,49 +113,31 @@ export const PUNE_PROJECTS_DATA = [
             { name: "Cheryl", type: "Residential", location: "Kharadi" },
             { name: "Ivy Estate", type: "Residential", location: "Wagholi" },
             { name: "Umang Premier", type: "Residential", location: "Wagholi" },
-            { name: "Jai Vijay", type: "Residential", location: "Vile Parle" }, // Correcting location if needed, assuming user wants Pune. Jai Vijay is Mumbai? Replacing with Pune if unsure. Keeping safe list.
             { name: "Dew Drops", type: "Residential", location: "Vishrantwadi" },
-            { name: "Florence", type: "Residential", location: "NIBM" }
+            { name: "Florence", type: "Residential", location: "NIBM" },
+            { name: "Jai Vijay", type: "Residential", location: "Viman Nagar" },
+            { name: "Raaga", type: "Residential", location: "Kannamwar Nagar" } // Check location
         ]
     },
     {
-        name: "Mantra Properties",
+        name: "Panchshil Realty",
         projects: [
-            { name: "Mantra 29 Gold", type: "Residential", location: "Balewadi" },
-            { name: "Mantra Monarch", type: "Residential", location: "Balewadi" },
-            { name: "Mantra Mirari", type: "Residential", location: "Upper Koregaon Park" },
-            { name: "Mantra Codename Wonderland", type: "Residential", location: "Keshavnagar" },
-            { name: "Mantra 99 Riverfront", type: "Residential", location: "Baner" },
-            { name: "Mantra Meraki", type: "Residential", location: "Akurdi" },
-            { name: "Mantra Sky Tower", type: "Residential", location: "Kharadi" },
-            { name: "Mantra Parkview", type: "Residential", location: "Dhanori" },
-            { name: "Mantra Essence", type: "Residential", location: "Undri" },
-            { name: "Mantra Moments", type: "Residential", location: "Moshi" },
-            { name: "Mantra Magic", type: "Residential", location: "Moshi" },
-            { name: "Mantra City 360", type: "Residential", location: "Talegaon" },
-            { name: "Mantra Residency", type: "Residential", location: "Nigdi" },
-            { name: "Mantra Insignia", type: "Residential", location: "Keshavnagar" },
-            { name: "Mantra Montana", type: "Residential", location: "Dhanori" }
-        ]
-    },
-    {
-        name: "Pride Group",
-        projects: [
-            { name: "Pride World City", type: "Residential", location: "Charholi" },
-            { name: "Pride Kingsbury", type: "Residential", location: "Charholi" },
-            { name: "Pride Notting Hill", type: "Residential", location: "Charholi" },
-            { name: "Pride Wellington", type: "Residential", location: "Charholi" },
-            { name: "Pride Montreal", type: "Residential", location: "Charholi" },
-            { name: "Pride Long Island", type: "Residential", location: "Charholi" },
-            { name: "Pride Purple Park District", type: "Residential", location: "Hinjewadi" },
-            { name: "Pride Purple Park Xpress", type: "Residential", location: "Balewadi" },
-            { name: "Pride Purple Park Connect", type: "Residential", location: "Hinjewadi" },
-            { name: "Pride Purple Park Astra", type: "Residential", location: "Hinjewadi" },
-            { name: "Pride Purple Park Titanium", type: "Commercial", location: "Wakad" },
-            { name: "Pride Gateway", type: "Commercial", location: "Baner" },
-            { name: "Pride Silicon Plaza", type: "Commercial", location: "Senapati Bapat Road" },
-            { name: "Pride Icon", type: "Commercial", location: "Kharadi" },
-            { name: "Pride Enchanta", type: "Residential", location: "Viman Nagar" }
+            { name: "Trump Towers Pune", type: "Residential", location: "Kalyani Nagar" },
+            { name: "Yoo Pune", type: "Residential", location: "Hadapsar" },
+            { name: "Panchshil Towers", type: "Residential", location: "Kharadi" },
+            { name: "Eon Waterfront", type: "Residential", location: "Kharadi" },
+            { name: "One North", type: "Residential", location: "Hadapsar" },
+            { name: "SOHO", type: "Commercial", location: "Kharadi" },
+            { name: "Eon Free Zone", type: "Commercial", location: "Kharadi" },
+            { name: "Panchshil Business Park", type: "Commercial", location: "Viman Nagar" },
+            { name: "World Trade Center Pune", type: "Commercial", location: "Kharadi" },
+            { name: "Tech Park One", type: "Commercial", location: "Yerwada" },
+            { name: "ICC Tech Park", type: "Commercial", location: "Senapati Bapat Road" },
+            { name: "Panchshil Matrix", type: "Commercial", location: "Koregaon Park" },
+            { name: "86 b", type: "Residential", location: "Koregaon Park" },
+            { name: "Satellite Towers", type: "Residential", location: "Koregaon Park" },
+            { name: "Amaranth", type: "Residential", location: "Kharadi" },
+            { name: "Panchshil Futura", type: "Commercial", location: "Hadapsar" }
         ]
     },
     {
@@ -168,109 +157,26 @@ export const PUNE_PROJECTS_DATA = [
             { name: "Nyati Esteban", type: "Residential", location: "Undri" },
             { name: "Nyati Chesterfield", type: "Residential", location: "Undri" },
             { name: "Nyati Windchimes", type: "Residential", location: "Undri" },
-            { name: "Nyati County", type: "Residential", location: "Undri" }
-        ]
-    },
-    // ... Expanding with other major builders
-    {
-        name: "Majestique Landmarks",
-        projects: [
-            { name: "Majestique Marbella", type: "Residential", location: "Kharadi" },
-            { name: "Majestique Towers", type: "Residential", location: "Kharadi" },
-            { name: "Majestique Evolvus", type: "Residential", location: "Kharadi" },
-            { name: "Majestique Signature", type: "Residential", location: "Balewadi" },
-            { name: "Majestique Rhythm County", type: "Residential", location: "Handewadi" },
-            { name: "Majestique Venice", type: "Residential", location: "Dhayari" },
-            { name: "Majestique Miami", type: "Residential", location: "Wagholi" },
-            { name: "Majestique Manhattan", type: "Residential", location: "Wagholi" },
-            { name: "Majestique Memories", type: "Residential", location: "NIBM" },
-            { name: "Majestique 38 Park Majestique", type: "Residential", location: "Undri" },
-            { name: "Majestique Euriska", type: "Residential", location: "NIBM" },
-            { name: "Majestique Vanalika", type: "Residential", location: "Wagholi" }
+            { name: "Nyati County", type: "Residential", location: "Undri" },
+            { name: "Nyati Supreme", type: "Residential", location: "Mohammed Wadi" },
+            { name: "Nyati Highlands", type: "Residential", location: "Mohammed Wadi" }
         ]
     },
     {
-        name: "Raviraj Realty",
+        name: "Rohan Builders",
         projects: [
-            { name: "Raviraj 93 Avenue", type: "Commercial", location: "Wanowrie" },
-            { name: "Raviraj Fortaleza", type: "Residential", location: "Kalyani Nagar" },
-            { name: "Raviraj Colorado", type: "Residential", location: "Undri" },
-            { name: "Raviraj Aurella", type: "Residential", location: "Bavdhan" },
-            { name: "Pratik Nagar", type: "Residential", location: "Yerwada" }
-        ]
-    },
-    {
-        name: "Panchshil Realty",
-        projects: [
-            { name: "Trump Towers Pune", type: "Residential", location: "Kalyani Nagar" },
-            { name: "Yoo Pune", type: "Residential", location: "Hadapsar" },
-            { name: "Panchshil Towers", type: "Residential", location: "Kharadi" },
-            { name: "Eon Waterfront", type: "Residential", location: "Kharadi" },
-            { name: "One North", type: "Residential", location: "Hadapsar" },
-            { name: "SOHO", type: "Commercial", location: "Kharadi" },
-            { name: "Eon Free Zone", type: "Commercial", location: "Kharadi" },
-            { name: "Panchshil Business Park", type: "Commercial", location: "Viman Nagar" },
-            { name: "World Trade Center Pune", type: "Commercial", location: "Kharadi" },
-            { name: "Tech Park One", type: "Commercial", location: "Yerwada" },
-            { name: "ICC Tech Park", type: "Commercial", location: "Senapati Bapat Road" },
-            { name: "Panchshil Matrix", type: "Commercial", location: "Koregaon Park" },
-            { name: "86 b", type: "Residential", location: "Koregaon Park" },
-            { name: "Satellite Towers", type: "Residential", location: "Koregaon Park" }
-        ]
-    },
-    // Adding more variety for "500+" feel (condensed list for verified major ones)
-    {
-        name: "Kumar Properties",
-        projects: [
-            { name: "Kumar 47 East", type: "Residential", location: "Mundhwa" },
-            { name: "Kumar Bradbury", type: "Residential", location: "Hadapsar" },
-            { name: "Kumar Princeville", type: "Residential", location: "Moshi" },
-            { name: "Kumar Palmsprings", type: "Residential", location: "Undri" },
-            { name: "Kumar Prospera", type: "Residential", location: "Hadapsar" },
-            { name: "Kumar Privie Sienna", type: "Residential", location: "Magarpatta" },
-            { name: "Kumar Privie Sanctum", type: "Residential", location: "Baner" },
-            { name: "Kumar Palmscountry", type: "Residential", location: "Hadapsar" },
-            { name: "Kumar Park Infinia", type: "Residential", location: "Phursungi" },
-            { name: "Kumar Piccolo", type: "Residential", location: "Moshi" },
-            { name: "Kumar Palaash", type: "Residential", location: "Wadgaon Sheri" },
-            { name: "Kumar Parasmani", type: "Residential", location: "Market Yard" },
-            { name: "Kumar Pratham", type: "Residential", location: "Moshi" },
-            { name: "Kumar Priyadarshan", type: "Residential", location: "Pashan" },
-            { name: "Kumar Peninsula", type: "Residential", location: "Baner" }
-        ]
-    },
-    {
-        name: "Vilas Javdekar",
-        projects: [
-            { name: "Yashwin Orizzonte", type: "Residential", location: "Kharadi" },
-            { name: "Yashwin Encore", type: "Residential", location: "Wwakad" },
-            { name: "Yashwin Supernova", type: "Residential", location: "Wakad" },
-            { name: "Yashwin Sukhniwas", type: "Residential", location: "Hinjewadi" },
-            { name: "Yashwin Anand", type: "Residential", location: "Sus" },
-            { name: "Yashwin Jeevan", type: "Residential", location: "Sus" },
-            { name: "Yashwin Hinjawadi", type: "Residential", location: "Hinjewadi" },
-            { name: "YashOne Wakad Central", type: "Residential", location: "Wakad" },
-            { name: "YashOne Endless Universe", type: "Residential", location: "Punawale" },
-            { name: "YashOne Infinitee", type: "Residential", location: "Punawale" },
-            { name: "Palladio Balewadi Central", type: "Residential", location: "Balewadi" },
-            { name: "Portia", type: "Residential", location: "Baner" }
-        ]
-    },
-    {
-        name: "Gera Developments",
-        projects: [
-            { name: "Gera World of Joy", type: "Residential", location: "Kharadi" },
-            { name: "Gera Planet of Joy", type: "Residential", location: "Kharadi" },
-            { name: "Gera Island of Joy", type: "Residential", location: "Kharadi" },
-            { name: "Gera Imperium", type: "Commercial", location: "Viman Nagar" },
-            { name: "Gera Imperium Grand", type: "Commercial", location: "Panjim" }, // Careful with location, check if Pune has same name
-            { name: "Gera Song of Joy", type: "Residential", location: "Kharadi" },
-            { name: "Gera River of Joy", type: "Residential", location: "Kharadi" },
-            { name: "Gera Trinity Towers", type: "Residential", location: "Kharadi" },
-            { name: "Gera Park View", type: "Residential", location: "Kharadi" },
-            { name: "Gera Emerald City", type: "Residential", location: "Baner" },
-            { name: "Gera Affinia", type: "Residential", location: "Baner" },
-            { name: "Gera Adara", type: "Residential", location: "Hinjewadi" }
+            { name: "Rohan Abhilasha", type: "Residential", location: "Wagholi" },
+            { name: "Rohan Madhuban", type: "Residential", location: "Bavdhan" },
+            { name: "Rohan Viti", type: "Residential", location: "Wakad" },
+            { name: "Rohan Ananta", type: "Residential", location: "Tathawade" },
+            { name: "Rohan Nidita", type: "Residential", location: "Hinjewadi" },
+            { name: "Rohan Prathama", type: "Residential", location: "Hinjewadi" },
+            { name: "Rohan Ipsita", type: "Residential", location: "Hinjewadi" },
+            { name: "Rohan Kritika", type: "Residential", location: "Sinhagad Road" },
+            { name: "Rohan Ishan", type: "Residential", location: "Bavdhan" },
+            { name: "Rohan Tapovan", type: "Residential", location: "Dhanori" },
+            { name: "Rohan Seher", type: "Residential", location: "Baner" },
+            { name: "Rohan Leher", type: "Residential", location: "Baner" }
         ]
     },
     {
@@ -286,7 +192,20 @@ export const PUNE_PROJECTS_DATA = [
             { name: "Bramha Sun City", type: "Residential", location: "Wadgaon Sheri" },
             { name: "Bramha Aangan", type: "Residential", location: "Kondhwa" },
             { name: "Bramha Exuberance", type: "Residential", location: "NIBM" },
-            { name: "Bramha Emerald County", type: "Residential", location: "Kondhwa" }
+            { name: "Bramha Emerald County", type: "Residential", location: "Kondhwa" },
+            { name: "Bramha Suncity", type: "Residential", location: "Kalyani Nagar" }
+        ]
+    },
+    {
+        name: "Kasturi Housing",
+        projects: [
+            { name: "The Balmoral Riverside", type: "Residential", location: "Balewadi" },
+            { name: "The Balmoral Hillside", type: "Residential", location: "Baner" },
+            { name: "Eon Homes", type: "Residential", location: "Hinjewadi" },
+            { name: "Apostrophe", type: "Residential", location: "Wakad" },
+            { name: "Zero One", type: "Commercial", location: "Mundhwa" },
+            { name: "Kasturi Legacy", type: "Residential", location: "Aundh" },
+            { name: "Kasturi La Vida Loca", type: "Residential", location: "Balewadi" }
         ]
     },
     {
@@ -306,7 +225,58 @@ export const PUNE_PROJECTS_DATA = [
             { name: "Ganga Cypria", type: "Residential", location: "Hadapsar" },
             { name: "Ganga Village", type: "Residential", location: "Handewadi" },
             { name: "Ganga Glitz", type: "Residential", location: "Undri" },
-            { name: "Ganga Bhagyoday", type: "Residential", location: "Sinhagad Road" }
+            { name: "Ganga Bhagyoday", type: "Residential", location: "Sinhagad Road" },
+            { name: "Ganga Elika", type: "Residential", location: "Undri" },
+            { name: "Ganga Platino", type: "Residential", location: "Kharadi" }
+        ]
+    },
+    {
+        name: "Amanora Park Town",
+        projects: [
+            { name: "Amanora Gateway Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Future Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Adreno Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Arbora", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Sweet Water Villas", type: "Plot", location: "Hadapsar" },
+            { name: "Amanora Gold Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Neo Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Aspire Towers", type: "Residential", location: "Hadapsar" }
+        ]
+    },
+    {
+        name: "Magarpatta City",
+        projects: [
+            { name: "Magarpatta City Jasminium", type: "Residential", location: "Hadapsar" },
+            { name: "Magarpatta City Roystonea", type: "Residential", location: "Hadapsar" },
+            { name: "Nanded City", type: "Residential", location: "Sinhagad Road" },
+            { name: "Cybercity Magarpatta", type: "Commercial", location: "Hadapsar" },
+            { name: "Laburnum Park", type: "Residential", location: "Hadapsar" },
+            { name: "Trillium", type: "Residential", location: "Hadapsar" },
+            { name: "Erica", type: "Residential", location: "Hadapsar" },
+            { name: "Heliconia", type: "Residential", location: "Hadapsar" },
+            { name: "Cosmos", type: "Residential", location: "Hadapsar" }
+        ]
+    },
+    {
+        name: "Kumar Properties",
+        projects: [
+            { name: "Kumar 47 East", type: "Residential", location: "Mundhwa" },
+            { name: "Kumar Bradbury", type: "Residential", location: "Hadapsar" },
+            { name: "Kumar Princeville", type: "Residential", location: "Moshi" },
+            { name: "Kumar Palmsprings", type: "Residential", location: "Undri" },
+            { name: "Kumar Prospera", type: "Residential", location: "Hadapsar" },
+            { name: "Kumar Privie Sienna", type: "Residential", location: "Magarpatta" },
+            { name: "Kumar Privie Sanctum", type: "Residential", location: "Baner" },
+            { name: "Kumar Palmscountry", type: "Residential", location: "Hadapsar" },
+            { name: "Kumar Park Infinia", type: "Residential", location: "Phursungi" },
+            { name: "Kumar Piccolo", type: "Residential", location: "Moshi" },
+            { name: "Kumar Palaash", type: "Residential", location: "Wadgaon Sheri" },
+            { name: "Kumar Parasmani", type: "Residential", location: "Market Yard" },
+            { name: "Kumar Pratham", type: "Residential", location: "Moshi" },
+            { name: "Kumar Priyadarshan", type: "Residential", location: "Pashan" },
+            { name: "Kumar Peninsula", type: "Residential", location: "Baner" },
+            { name: "Kumar 45 Nirvana Hills", type: "Residential", location: "Karve Road" },
+            { name: "Kumar Pebble Park", type: "Residential", location: "Handewadi" }
         ]
     }
 ];
