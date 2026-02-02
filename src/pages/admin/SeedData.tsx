@@ -517,13 +517,26 @@ const SeedData = () => {
                             }`}
                     >
                         {isSeeding ? (
-                            <>
-                                <Loader2 className="w-6 h-6 animate-spin" /> Seeding in Progress... {progress}%
-                            </>
+                           if (isTownship) {
+                    const {error: pError } = await supabase
+                        .from('projects')
+                        .upsert({...projectData}, {onConflict: 'slug' }); // Upsert to fix duplicates
+                        if (pError) throw pError;
+
+                    // ... (log success)
+                } else {
+                    const {error: pError } = await supabase
+                        .from('projects')
+                        .upsert({...projectData}, {onConflict: 'slug' }); // Upsert to fix duplicates
+                        if (pError) throw pError;
+                }
+                        <>
+                            <Loader2 className="w-6 h-6 animate-spin" /> Seeding in Progress... {progress}%
+                        </>
                         ) : (
-                            <>
-                                <Play className="w-6 h-6" /> Start Population
-                            </>
+                        <>
+                            <Play className="w-6 h-6" /> Start Population
+                        </>
                         )}
                     </button>
                 </div>
