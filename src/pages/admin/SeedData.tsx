@@ -67,7 +67,7 @@ const SEED_DATA = [
             { name: "VTP Luxe", type: "Residential", location: "Mahalunge" },
             { name: "Codename Never Before", type: "Residential", location: "Kharadi" },
             { name: "VTP Trade Park", type: "Commercial", location: "Undri" },
-            { name: "VTP Altitude", type: "Commercial", location: "Wakad" },
+            { name: "VTP Altitude", type: "Commercial", location: "Wwakad" },
             { name: "VTP Marketplace", type: "Commercial", location: "Hinjewadi" }
         ]
     },
@@ -91,6 +91,7 @@ const SEED_DATA = [
             { name: "Kolte Patil Western Avenue", type: "Residential", location: "Wakad" },
             { name: "Kolte Patil Three Jewels", type: "Residential", location: "Katraj" },
             { name: "Kolte Patil Mount Castle", type: "Residential", location: "Wagholi" },
+            // Adding Commercial
             { name: "Life Republic Sound Square", type: "Commercial", location: "Hinjewadi" },
             { name: "Kolte Patil 45 West", type: "Commercial", location: "Baner" },
             { name: "Kolte Patil Giga Space", type: "Commercial", location: "Viman Nagar" },
@@ -98,163 +99,103 @@ const SEED_DATA = [
         ]
     },
     {
-        name: "Sobha Limited",
-        projects: [
-            { name: "Sobha Nesara", type: "Residential", location: "Chandani Chowk" },
-            { name: "Sobha Garnet", type: "Residential", location: "Kondhwa" },
-            { name: "Sobha Orion", type: "Residential", location: "Kondhwa" }
-        ]
-    },
-    {
         name: "Panchshil Realty",
         projects: [
-            { name: "Panchshil Towers", type: "Residential", location: "Kharadi" },
-            { name: "Eon Free Zone", type: "Commercial", location: "Kharadi" },
-            { name: "Yoo Pune", type: "Residential", location: "Hadapsar" },
             { name: "Trump Towers Pune", type: "Residential", location: "Kalyani Nagar" },
-            { name: "Panchshil Business Park", type: "Commercial", location: "Viman Nagar" }
+            { name: "Yoo Pune", type: "Residential", location: "Hadapsar" },
+            { name: "Panchshil Towers", type: "Residential", location: "Kharadi" },
+            { name: "Eon Waterfront", type: "Residential", location: "Kharadi" },
+            { name: "One North", type: "Residential", location: "Hadapsar" },
+            { name: "SOHO", type: "Commercial", location: "Kharadi" },
+            { name: "Eon Free Zone", type: "Commercial", location: "Kharadi" },
+            { name: "Panchshil Business Park", type: "Commercial", location: "Viman Nagar" },
+            { name: "World Trade Center Pune", type: "Commercial", location: "Kharadi" }
         ]
     },
     {
-        name: "Nyati Group",
+        name: "Amanora Park Town",
         projects: [
-            { name: "Nyati Unitree", type: "Commercial", location: "Yerwada" },
-            { name: "Nyati Elysia", type: "Residential", location: "Kharadi" },
-            { name: "Nyati Equinox", type: "Residential", location: "Bavdhan" },
-            { name: "Nyati Exuberance", type: "Residential", location: "Undri" }
+            { name: "Amanora Gateway Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Future Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Adreno Towers", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Arbora", type: "Residential", location: "Hadapsar" },
+            { name: "Amanora Sweet Water Villas", type: "Plot", location: "Hadapsar" }
         ]
     },
     {
-        name: "Lodha Developers",
+        name: "Magarpatta City",
         projects: [
-            { name: "Lodha Belmondo", type: "Residential", location: "Mumbai-Pune Expressway" },
-            { name: "Lodha Giardino", type: "Residential", location: "Kharadi" },
-            { name: "Lodha Panache", type: "Residential", location: "Hinjewadi" }
+            { name: "Magarpatta City Jasminium", type: "Residential", location: "Hadapsar" },
+            { name: "Magarpatta City Roystonea", type: "Residential", location: "Hadapsar" },
+            { name: "Nanded City", type: "Residential", location: "Sinhagad Road" },
+            { name: "Cybercity Magarpatta", type: "Commercial", location: "Hadapsar" }
+        ]
+    },
+    {
+        name: "BramhaCorp",
+        projects: [
+            { name: "The Collection", type: "Residential", location: "Kalyani Nagar" },
+            { name: "F-Residences", type: "Residential", location: "Kalyani Nagar" },
+            { name: "BramhaCorp Smart", type: "Residential", location: "Kalyani Nagar" },
+            { name: "BramhaCorp Business Park", type: "Commercial", location: "Kalyani Nagar" },
+            { name: "Boulevard Towers", type: "Commercial", location: "Pune Camp" }
+        ]
+    },
+    {
+        name: "Kasturi Housing",
+        projects: [
+            { name: "The Balmoral Riverside", type: "Residential", location: "Balewadi" },
+            { name: "The Balmoral Hillside", type: "Residential", location: "Baner" },
+            { name: "Eon Homes", type: "Residential", location: "Hinjewadi" },
+            { name: "Apostrophe", type: "Residential", location: "Wakad" },
+            { name: "Zero One", type: "Commercial", location: "Mundhwa" }
         ]
     },
     {
         name: "Rohan Builders",
         projects: [
             { name: "Rohan Abhilasha", type: "Residential", location: "Wagholi" },
-            { name: "Rohan Ananta", type: "Residential", location: "Tathawade" },
             { name: "Rohan Madhuban", type: "Residential", location: "Bavdhan" },
-            { name: "Rohan Viti", type: "Residential", location: "Wakad" }
+            { name: "Rohan Viti", type: "Residential", location: "Wakad" },
+            { name: "Rohan Ananta", type: "Residential", location: "Tathawade" },
+            { name: "Rohan Nidita", type: "Residential", location: "Hinjewadi" }
         ]
     },
     {
-        name: "Mittal Brothers",
+        name: "Nyati Group",
         projects: [
-            { name: "Mittal Brothers High Mont", type: "Residential", location: "Hinjewadi" },
-            { name: "Mittal Brothers Petals", type: "Residential", location: "Wakad" }
+            { name: "Nyati Elysis", type: "Residential", location: "Kharadi" },
+            { name: "Nyati Evolve", type: "Residential", location: "Magarpatta" },
+            { name: "Nyati Equatorial", type: "Residential", location: "Bavdhan" },
+            { name: "Nyati Unitree", type: "Commercial", location: "Yerwada" },
+            { name: "Nyati Empress", type: "Commercial", location: "Viman Nagar" }
         ]
     },
     {
-        name: "Naiknavare Developers",
+        name: "Kohinoor Group",
         projects: [
-            { name: "Naiknavare Dwarka Township", type: "Residential", location: "Chakan" },
-            { name: "Naiknavare Avon Vista", type: "Residential", location: "Balewadi" },
-            { name: "Naiknavare 7 Plumeria Drive", type: "Residential", location: "Tathawade" }
+            { name: "Kohinoor World Towers", type: "Commercial", location: "Pimpri" },
+            { name: "Kohinoor Presidentia", type: "Residential", location: "Sopaan Baug" },
+            { name: "Kohinoor Viva City", type: "Residential", location: "Dhanori" },
+            { name: "Kohinoor Kaleido", type: "Residential", location: "Wagholi" },
+            { name: "Kohinoor Shangrila", type: "Residential", location: "Pimpri" }
         ]
     },
     {
-        name: "BramhaCorp",
+        name: "Solitaire",
         projects: [
-            { name: "BramhaCorp The Collection", type: "Residential", location: "Kalyani Nagar" },
-            { name: "BramhaCorp Business Park", type: "Commercial", location: "Kalyani Nagar" },
-            { name: "BramhaCorp F-Residences", type: "Residential", location: "Kalyani Nagar" },
-            { name: "BramhaCorp August Towers", type: "Residential", location: "Wadgaon Sheri" }
+            { name: "Solitaire Business Hub", type: "Commercial", location: "Baner" },
+            { name: "Solitaire Business Hub", type: "Commercial", location: "Viman Nagar" },
+            { name: "Solitaire World", type: "Residential", location: "Bibvewadi" },
+            { name: "Solitaire Mudra", type: "Residential", location: "Bibvewadi" }
         ]
     },
     {
-        name: "Pharande Spaces",
+        name: "Amar Builders",
         projects: [
-            { name: "Puneville", type: "Residential", location: "Punawale" },
-            { name: "Woodsville", type: "Residential", location: "Moshi" },
-            { name: "Pharande L-Axis", type: "Residential", location: "Pimpri" }
-        ]
-    },
-    {
-        name: "Kasturi Housing",
-        projects: [
-            { name: "The Balmoral Hillside", type: "Residential", location: "Baner" },
-            { name: "The Balmoral Riverside", type: "Residential", location: "Balewadi" },
-            { name: "The Balmoral Towers", type: "Residential", location: "Balewadi" },
-            { name: "Kasturi Eon Homes", type: "Residential", location: "Hinjewadi" },
-            { name: "Kasturi Apostrophe", type: "Residential", location: "Hinjewadi" },
-            { name: "Kasturi Epitome", type: "Residential", location: "Wakad" },
-            { name: "Kasturi The Legacy", type: "Commercial", location: "Shivajinagar" }
-        ]
-    },
-    {
-        name: "Kalpataru Builders",
-        projects: [
-            { name: "Kalpataru Jade Residences", type: "Residential", location: "Baner" },
-            { name: "Kalpataru Vishrambag", type: "Residential", location: "Vishrambag" },
-            { name: "Kalpataru Serenity", type: "Residential", location: "Manjri" }
-        ]
-    },
-    {
-        name: "Saheel Developers",
-        projects: [
-            { name: "Saheel ITrend Life", type: "Residential", location: "Wakad" },
-            { name: "Saheel ITrend City", type: "Residential", location: "Wakad" },
-            { name: "Saheel ITrend Futura", type: "Residential", location: "Baner" }
-        ]
-    },
-    {
-        name: "K Raheja Corp",
-        projects: [
-            { name: "K Raheja Viva", type: "Residential", location: "Pirangut" },
-            { name: "Raheja Vistas Premiere", type: "Residential", location: "NIBM" },
-            { name: "Raheja Reserve", type: "Residential", location: "NIBM" }
-        ]
-    },
-    {
-        name: "Paranjape Schemes",
-        projects: [
-            { name: "Blue Ridge", type: "Residential", location: "Hinjewadi" },
-            { name: "Forest Trails", type: "Residential", location: "Bhugaon" },
-            { name: "Paranjape Broadway", type: "Residential", location: "Wakad" }
-        ]
-    },
-    {
-        name: "Shapoorji Pallonji",
-        projects: [
-            { name: "Shapoorji Joyville", type: "Residential", location: "Hinjewadi" },
-            { name: "Shapoorji Vanaha", type: "Residential", location: "Bavdhan" },
-            { name: "Shapoorji Sensorium", type: "Residential", location: "Hinjewadi" }
-        ]
-    },
-    {
-        name: "Goel Ganga Developments",
-        projects: [
-            { name: "Ganga Legend", type: "Residential", location: "Bavdhan" },
-            { name: "Ganga Fernhill", type: "Residential", location: "Undri" },
-            { name: "Ganga Asmi", type: "Residential", location: "Wakad" }
-        ]
-    },
-    {
-        name: "Mahindra Lifespaces",
-        projects: [
-            { name: "Mahindra Happinest", type: "Residential", location: "Tathawade" },
-            { name: "Mahindra Antheia", type: "Residential", location: "Pimpri" },
-            { name: "Mahindra Citadel", type: "Residential", location: "Pimpri" }
-        ]
-    },
-    {
-        name: "Kumar Properties",
-        projects: [
-            { name: "Kumar 47 East", type: "Residential", location: "Mundhwa" },
-            { name: "Kumar Bradbury", type: "Residential", location: "Hadapsar" },
-            { name: "Kumar Princeville", type: "Residential", location: "Moshi" }
-        ]
-    },
-    {
-        name: "Vilas Javdekar Developers",
-        projects: [
-            { name: "Yashwin Orizzonte", type: "Residential", location: "Kharadi" },
-            { name: "Yashwin Encore", type: "Residential", location: "Wakad" },
-            { name: "Yashwin Supernova", type: "Residential", location: "Wakad" }
+            { name: "Amar Landmark", type: "Commercial", location: "Baner" },
+            { name: "Amar Business Park", type: "Commercial", location: "Baner" },
+            { name: "Amar Renaissance", type: "Residential", location: "Sopaan Baug" }
         ]
     },
     {
@@ -262,7 +203,46 @@ const SEED_DATA = [
         projects: [
             { name: "Gera World of Joy", type: "Residential", location: "Kharadi" },
             { name: "Gera Planet of Joy", type: "Residential", location: "Kharadi" },
-            { name: "Gera Island of Joy", type: "Residential", location: "Kharadi" }
+            { name: "Gera Island of Joy", type: "Residential", location: "Kharadi" },
+            { name: "Gera Imperium", type: "Commercial", location: "Viman Nagar" }
+        ]
+    },
+    {
+        name: "Goel Ganga Developments",
+        projects: [
+            { name: "Ganga Legend", type: "Residential", location: "Bavdhan" },
+            { name: "Ganga Fernhill", type: "Residential", location: "Undri" },
+            { name: "Ganga Asmi", type: "Residential", location: "Wakad" },
+            { name: "Ganga Acropolis", type: "Residential", location: "Baner" }
+        ]
+    },
+    {
+        name: "Lodha Group",
+        projects: [
+            { name: "Lodha Belmondo", type: "Residential", location: "Gahunje" },
+            { name: "Lodha Giardino", type: "Residential", location: "Kharadi" },
+            { name: "Lodha Panache", type: "Residential", location: "Hinjewadi" }
+        ]
+    },
+    {
+        name: "Sobha Limited",
+        projects: [
+            { name: "Sobha Nesara", type: "Residential", location: "Chandani Chowk" },
+            { name: "Sobha Orion", type: "Residential", location: "Kondhwa" }
+        ]
+    },
+    {
+        name: "Kalpataru",
+        projects: [
+            { name: "Kalpataru Jade Residences", type: "Residential", location: "Baner" },
+            { name: "Kalpataru Serenity", type: "Residential", location: "Manjri" },
+            { name: "Kalpataru Exquisite", type: "Residential", location: "Wakad" }
+        ]
+    },
+    {
+        name: "Prestige Group",
+        projects: [
+            { name: "Prestige Panorama", type: "Residential", location: "Keshavnagar" }
         ]
     }
 ];
