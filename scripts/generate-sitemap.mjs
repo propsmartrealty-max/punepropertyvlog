@@ -15,10 +15,16 @@ if (!process.env.VITE_SUPABASE_URL) {
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
+// DIAGNOSTICS: Print available keys (sanitized) to debug Vercel build
+console.log("🔍 Checking Environment Variables for Sitemap...");
+const envKeys = Object.keys(process.env).filter(k => k.startsWith('VITE_'));
+console.log("ℹ️  Available VITE_ keys:", envKeys.join(', '));
+
 if (!supabaseUrl || !supabaseKey) {
-    console.warn("⚠️  Supabase keys missing. Sitemap generation skipped.");
-    // Exit successfully so build continues
-    process.exit(0);
+    console.error("❌ Supabase keys missing causing Sitemap generation failure.");
+    console.error("   VITE_SUPABASE_URL present?", !!supabaseUrl);
+    console.error("   VITE_SUPABASE_ANON_KEY present?", !!supabaseKey);
+    // Do not exit, allow build to proceed but log strict error
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
