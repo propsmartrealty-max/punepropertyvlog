@@ -446,7 +446,6 @@ const SeedData = () => {
 
                         try {
                             // Upsert Logic for Projects
-                            const { supabase } = await import('../../services/supabase');
                             const { error: pError } = await supabase
                                 .from('projects')
                                 .upsert({
