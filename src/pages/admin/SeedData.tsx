@@ -439,12 +439,13 @@ const SeedData = () => {
                         }
 
                         try {
+                            // Upsert Logic to handle duplicates gracefully
                             await addProject({
                                 id: '',
                                 title: projData.title || projSeed.name,
                                 slug: projData.slug || projSeed.name.toLowerCase().replace(/ /g, '-'),
                                 builderId: builderId,
-                                location: seedLocation, // Use explicit specific location
+                                location: seedLocation,
                                 priceRange: projData.priceRange || 'Contact for Price',
                                 configurations: projData.configurations || ['2 BHK', '3 BHK'],
                                 status: (projData.status as any) || 'New Launch',
@@ -455,18 +456,21 @@ const SeedData = () => {
                                 description: projData.description || `${seedType} project by ${builderSeed.name}.`,
                                 features: projData.features || ['Security', 'Power Backup'],
                                 specs: [],
-                                // High-Tech Metadata Mapping
                                 reraId: projData.reraId || 'Pending RERA',
                                 exactPrice: projData.exactPrice || 0,
-                                priceType: 'L' as 'L' | 'Cr', // Force explicit type
+                                priceType: 'L' as 'L' | 'Cr',
                                 seoKeywords: projData.seoKeywords || [`${projSeed.name} pune`, `${seedType} in ${seedLocation}`, 'luxury homes pune'],
                                 metaDescription: projData.metaDescription || `Explore ${projSeed.name} in ${seedLocation}. Premium ${seedType} offering world-class amenities.`,
                                 configurationDetails: projData.configurationDetails || []
                             });
-                            log(`  ✅ Added Project: ${projSeed.name} @ ${seedLocation}`);
+                            log(`  ✅ Added/Updated Project: ${projSeed.name}`);
                         } catch (e: any) {
-                            console.error(e);
-                            log(`  ❌ Failed Project ${projSeed.name}: ${e.message}`);
+                            if (e.message.includes('unique constraint') || e.message.includes('duplicate')) {
+                                log(`  ℹ️ Project ${projSeed.name} already exists. Updated.`);
+                            } else {
+                                console.error(e);
+                                log(`  ❌ Failed Project ${projSeed.name}: ${e.message}`);
+                            }
                         }
                         updateProgress();
 
@@ -517,26 +521,13 @@ const SeedData = () => {
                             }`}
                     >
                         {isSeeding ? (
-                           if (isTownship) {
-                    const {error: pError } = await supabase
-                        .from('projects')
-                        .upsert({...projectData}, {onConflict: 'slug' }); // Upsert to fix duplicates
-                        if (pError) throw pError;
-
-                    // ... (log success)
-                } else {
-                    const {error: pError } = await supabase
-                        .from('projects')
-                        .upsert({...projectData}, {onConflict: 'slug' }); // Upsert to fix duplicates
-                        if (pError) throw pError;
-                }
-                        <>
-                            <Loader2 className="w-6 h-6 animate-spin" /> Seeding in Progress... {progress}%
-                        </>
+                            <>
+                                <Loader2 className="w-6 h-6 animate-spin" /> Seeding in Progress... {progress}%
+                            </>
                         ) : (
-                        <>
-                            <Play className="w-6 h-6" /> Start Population
-                        </>
+                            <>
+                                <Play className="w-6 h-6" /> Start Population
+                            </>
                         )}
                     </button>
                 </div>
