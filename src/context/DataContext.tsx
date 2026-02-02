@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Project, Builder } from '../types';
+import { Project, Builder, Locality } from '../types';
 import { api, ProjectFilters } from '../services/api';
 
 interface DataContextType {
@@ -12,8 +12,9 @@ interface DataContextType {
     // or keep this context mainly for Admin CRUD operations which might still need global updates.
 
     // Changing the interface to be more Hook-centric
-    projects: Project[]; // Backward compatibility: will return first page or needed ones
+    projects: Project[]; // Backward compatibility
     builders: Builder[];
+    localities: Locality[]; // Phase 3: Expose localities
     isLoading: boolean;
     error: Error | null;
 
@@ -25,6 +26,13 @@ interface DataContextType {
     updateBuilder: (id: string, updates: Partial<Builder>) => Promise<void>;
     deleteBuilder: (id: string) => Promise<void>;
 
+
+    // Compare Logic
+    compareList: string[];
+    addToCompare: (id: string) => void;
+    removeFromCompare: (id: string) => void;
+    clearCompare: () => void;
+
     refreshData: () => void;
 }
 
@@ -33,11 +41,39 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const queryClient = useQueryClient();
 
-    // Fetch initial data for "Home" or general usage (e.g. latest 10)
-    // In a real robust app, individual pages should trigger their own queries.
-    // For backward compatibility with the current "load everything" approach, 
-    // we might need to adjust, but let's try to stick to "fetching what's needed".
-    // For now, let's fetch the first page of projects to populate the "projects" array.
+    // Compare Logic State
+    const [compareList, setCompareList] = React.useState<string[]>(() => {
+        const saved = localStorage.getItem('propsmart_compare');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    const addToCompare = (id: string) => {
+        setCompareList(prev => {
+            if (prev.includes(id)) return prev;
+            if (prev.length >= 3) {
+                // Optional: Notify user max 3
+                return prev;
+            }
+            const newList = [...prev, id];
+            localStorage.setItem('propsmart_compare', JSON.stringify(newList));
+            return newList;
+        });
+    };
+
+    const removeFromCompare = (id: string) => {
+        setCompareList(prev => {
+            const newList = prev.filter(item => item !== id);
+            localStorage.setItem('propsmart_compare', JSON.stringify(newList));
+            return newList;
+        });
+    };
+
+    const clearCompare = () => {
+        setCompareList([]);
+        localStorage.removeItem('propsmart_compare');
+    };
+
+    // Fetch initial data
     const projectsQuery = useQuery({
         queryKey: ['projects', 'initial'],
         queryFn: () => api.projects.list(1, {}),
@@ -48,18 +84,27 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         queryFn: () => api.builders.list(),
     });
 
+    // Phase 3: Fetch Localities globally for Deal Engine
+    const localitiesQuery = useQuery({
+        queryKey: ['localities'],
+        queryFn: async () => {
+            const { supabase } = await import('../services/supabase');
+            const { data } = await supabase.from('localities').select('*');
+            return data || [];
+        }
+    });
+
     // Mutations
     const addProjectMutation = useMutation({
         mutationFn: async (project: Project) => {
-            // We need to implement create in api.ts or use supabase directly here
-            // For now, assuming direct supabase call or adding to api.ts. 
-            // To keep it simple let's use the previous logic but wrapped.
-            // Ideally we move this to api.ts in next step.
             const { supabase } = await import('../services/supabase');
-            const { id, ...data } = project;
-            const payload = id.startsWith('p') || id === '' ? data : project;
-            const { error } = await supabase.from('projects').insert([payload]);
+            const { id, advancedConfigurations, ...data } = project;
+            const payload = id.startsWith('p') || id === '' ? data : { ...data, id };
+            const { data: inserted, error } = await supabase.from('projects').insert([payload]).select().single();
             if (error) throw error;
+            if (advancedConfigurations && advancedConfigurations.length > 0) {
+                await api.projects.saveConfigurations(inserted.id, advancedConfigurations);
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['projects'] });
@@ -69,8 +114,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const updateProjectMutation = useMutation({
         mutationFn: async ({ id, updates }: { id: string; updates: Partial<Project> }) => {
             const { supabase } = await import('../services/supabase');
-            const { error } = await supabase.from('projects').update(updates).eq('id', id);
+            const { advancedConfigurations, ...data } = updates;
+            const { error } = await supabase.from('projects').update(data).eq('id', id);
             if (error) throw error;
+            if (advancedConfigurations) {
+                await api.projects.saveConfigurations(id, advancedConfigurations);
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['projects'] });
@@ -123,8 +172,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         <DataContext.Provider value={{
             projects: projectsQuery.data?.data || [],
             builders: buildersQuery.data || [],
-            isLoading: projectsQuery.isLoading || buildersQuery.isLoading,
+            localities: localitiesQuery.data || [],
+            isLoading: projectsQuery.isLoading || buildersQuery.isLoading || localitiesQuery.isLoading,
             error: (projectsQuery.error as Error) || (buildersQuery.error as Error) || null,
+
+            compareList,
+            addToCompare,
+            removeFromCompare,
+            clearCompare,
 
             addProject: (p) => addProjectMutation.mutateAsync(p),
             updateProject: (id, u) => updateProjectMutation.mutateAsync({ id, updates: u }),

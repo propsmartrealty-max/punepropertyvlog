@@ -15,7 +15,13 @@ export const uploadFile = async (file: File, bucket: string = 'website-assets'):
             .upload(filePath, file);
 
         if (error) {
-            console.error(`Supabase Upload Error (${bucket}):`, error);
+            console.error("Supabase Storage Upload Error Details:", {
+                message: error.message,
+                name: error.name,
+                details: (error as any).details,
+                statusCode: (error as any).statusCode,
+                bucket
+            });
             throw error;
         }
 

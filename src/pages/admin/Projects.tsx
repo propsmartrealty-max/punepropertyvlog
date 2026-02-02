@@ -1,17 +1,27 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { useData } from '../../context/DataContext';
 import { Edit, Trash2, Plus, MapPin } from 'lucide-react';
 
+import DeleteConfirmationModal from '../../components/Admin/DeleteConfirmationModal';
+
 const Projects = () => {
     const { projects, builders, deleteProject } = useData();
     const navigate = useNavigate();
+    const [deleteModal, setDeleteModal] = React.useState<{ isOpen: boolean; id: string | null; name: string }>({
+        isOpen: false,
+        id: null,
+        name: ''
+    });
 
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this project?')) {
-            deleteProject(id);
+    const openDeleteModal = (id: string, name: string) => {
+        setDeleteModal({ isOpen: true, id, name });
+    };
+
+    const confirmDelete = () => {
+        if (deleteModal.id) {
+            deleteProject(deleteModal.id);
         }
     };
 
@@ -77,7 +87,7 @@ const Projects = () => {
                                             <Edit className="w-4 h-4" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(project.id)}
+                                            onClick={() => openDeleteModal(project.id, project.title)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                         >
                                             <Trash2 className="w-4 h-4" />
@@ -88,14 +98,35 @@ const Projects = () => {
                         ))}
                         {projects.length === 0 && (
                             <tr>
-                                <td colSpan={5} className="text-center py-8 text-slate-500">
-                                    No projects found. Create one to get started.
+                                <td colSpan={5} className="text-center py-12">
+                                    <div className="flex flex-col items-center justify-center text-slate-400">
+                                        <div className="bg-slate-50 p-4 rounded-full mb-3">
+                                            <MapPin className="w-8 h-8 text-slate-300" />
+                                        </div>
+                                        <p className="text-lg font-semibold text-slate-600">No Projects Found</p>
+                                        <p className="text-sm mb-4">Start by adding your first real estate project.</p>
+                                        <Link
+                                            to="/admin/projects/new"
+                                            className="text-blue-600 font-medium hover:underline"
+                                        >
+                                            Create New Project
+                                        </Link>
+                                    </div>
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+                onConfirm={confirmDelete}
+                title="Delete Project"
+                message="Are you sure you want to delete this project? This action cannot be undone."
+                itemName={deleteModal.name}
+            />
         </AdminLayout>
     );
 };

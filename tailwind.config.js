@@ -11,30 +11,40 @@ export default {
             },
             colors: {
                 brand: {
-                    50: '#eef2ff',
-                    100: '#e0e7ff',
-                    200: '#c7d2fe',
-                    300: '#a5b4fc',
-                    400: '#818cf8',
-                    500: '#6366f1', // Royal Violet - Primary
-                    600: '#4f46e5',
-                    700: '#4338ca',
-                    800: '#3730a3',
-                    900: '#312e81',
-                    950: '#1e1b4b',
+                    50: '#f0f4ff',
+                    100: '#e0eaff',
+                    200: '#c5d9ff',
+                    300: '#9dbfff',
+                    400: '#6e9bff',
+                    500: '#4071ff',
+                    600: '#1a4bff',  // Royal Blue (Vibrant but not dark)
+                    700: '#0033d6',
+                    800: '#002aa8',  // Deep Royal
+                    900: '#002585',  // Classic Corporate Blue (Softer than Navy)
+                    950: '#00154a',
                 },
                 accent: {
-                    50: '#fff7ed',
-                    100: '#ffedd5',
-                    200: '#fed7aa',
-                    300: '#fdba74',
-                    400: '#fb923c',
-                    500: '#f97316', // Vibrant Coral - Action
-                    600: '#ea580c',
-                    700: '#c2410c',
-                    800: '#9a3412',
-                    900: '#7c2d12',
-                    950: '#431407',
+                    50: '#f0fdf4',
+                    100: '#dcfce7',
+                    200: '#bbf7d0',
+                    300: '#86efac',
+                    400: '#4ade80',
+                    500: '#22c55e',
+                    600: '#16a34a',
+                    700: '#15803d', // Dark Green (Primary "Green Signal")
+                    800: '#166534',
+                    900: '#14532d',
+                    950: '#052e16',
+                },
+                // Refine custom tokens
+                navy: {
+                    DEFAULT: '#1e3a8a', // Blue 900
+                    light: '#1e40af',   // Blue 800
+                },
+                gold: {
+                    DEFAULT: '#C5A059', // Champagne Gold
+                    light: '#E5C985',   // Soft Gold
+                    dark: '#997B30',    // Antique Gold
                 },
                 dark: {
                     DEFAULT: '#0f172a', // Slate-900 (Rich Navy)

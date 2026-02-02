@@ -5,13 +5,24 @@ import AdminLayout from '../../components/Admin/AdminLayout';
 import { useData } from '../../context/DataContext';
 import { Edit, Trash2, Plus, MapPin } from 'lucide-react';
 
+import DeleteConfirmationModal from '../../components/Admin/DeleteConfirmationModal';
+
 const Builders = () => {
     const { builders, deleteBuilder } = useData();
     const navigate = useNavigate();
+    const [deleteModal, setDeleteModal] = React.useState<{ isOpen: boolean; id: string | null; name: string }>({
+        isOpen: false,
+        id: null,
+        name: ''
+    });
 
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this builder? Projects associated with this builder might display errors.')) {
-            deleteBuilder(id);
+    const openDeleteModal = (id: string, name: string) => {
+        setDeleteModal({ isOpen: true, id, name });
+    };
+
+    const confirmDelete = () => {
+        if (deleteModal.id) {
+            deleteBuilder(deleteModal.id);
         }
     };
 
@@ -63,7 +74,7 @@ const Builders = () => {
                                             <Edit className="w-4 h-4" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(builder.id)}
+                                            onClick={() => openDeleteModal(builder.id, builder.name)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                         >
                                             <Trash2 className="w-4 h-4" />
@@ -74,14 +85,35 @@ const Builders = () => {
                         ))}
                         {builders.length === 0 && (
                             <tr>
-                                <td colSpan={4} className="text-center py-8 text-slate-500">
-                                    No builders found. Create one.
+                                <td colSpan={4} className="text-center py-12">
+                                    <div className="flex flex-col items-center justify-center text-slate-400">
+                                        <div className="bg-slate-50 p-4 rounded-full mb-3">
+                                            <MapPin className="w-8 h-8 text-slate-300" />
+                                        </div>
+                                        <p className="text-lg font-semibold text-slate-600">No Builders Found</p>
+                                        <p className="text-sm mb-4">Add builders to associate projects with.</p>
+                                        <Link
+                                            to="/admin/builders/new"
+                                            className="text-blue-600 font-medium hover:underline"
+                                        >
+                                            Add Builder
+                                        </Link>
+                                    </div>
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+                onConfirm={confirmDelete}
+                title="Delete Builder"
+                message="Are you sure you want to delete this builder? WARNING: Projects associated with this builder might display errors."
+                itemName={deleteModal.name}
+            />
         </AdminLayout>
     );
 };

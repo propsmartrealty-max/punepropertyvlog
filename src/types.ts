@@ -44,7 +44,12 @@ export interface Builder {
   establishedYear: number;
   totalProjects: number;
   ongoingProjects: number;
-  locations: string[];
+  locations: string[]; // Keeping as string array for now unless we want relation
+  // Phase 4: Trust Score
+  experience?: number;
+  trustScore?: number;
+  isVerified?: boolean;
+  mobile?: string;
 }
 
 export interface Project {
@@ -65,6 +70,8 @@ export interface Project {
   possessionDate: string;
   image: string;
   heroImage?: string;
+  lat?: number;
+  lng?: number;
   masterLayout?: string;
   floorPlans?: string[];
   logo?: string;
@@ -79,11 +86,49 @@ export interface Project {
     label: string;
     value: string;
   }[];
+  // Phase 2: Advanced Data
+  verificationStatus?: 'Pending' | 'Verified' | 'Rejected';
+  verificationSource?: string;
+  advancedConfigurations?: ProjectConfiguration[];
+  pricePerSqft?: number; // Phase 3: Deal Calculation
 }
 
-export interface Location {
+export interface ProjectConfiguration {
+  id: string;
+  projectId: string;
+  name: string; // e.g. "2 BHK Luxury"
+  carpetArea: number; // in sq ft
+  balconyArea: number; // in sq ft
+  bathrooms: number;
+  basePrice: number; // Base agreement value
+  pricePerSqft?: number; // Optional rate
+  infraCharges: number; // Fixed infra/amenities charges
+  clubhouseCharges: number;
+  gstRate: number; // Percentage (e.g. 5)
+  stampDutyRate: number; // Percentage (e.g. 7)
+  registrationCharges: number; // Fixed amount
+  layoutImage?: string;
+  createdAt?: string;
+}
+
+export interface Locality {
   id: string;
   name: string;
-  image: string;
-  projectCount: number;
+  image?: string;
+  projectCount?: number;
+  avgPriceSqft?: number;
+  appreciation_rate?: number;
+  last_updated?: string;
+}
+
+export interface Lead {
+  id: string;
+  name: string;
+  mobile: string;
+  email?: string;
+  type: string; // 'Site Visit', 'Brochure', 'Callback'
+  project_id?: string;
+  status: 'New' | 'Contacted' | 'Closed' | 'Invalid';
+  metadata?: any;
+  created_at?: string;
 }

@@ -86,10 +86,10 @@ const HeroSearch = () => {
                 <motion.div
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-sm font-semibold text-brand-200 mb-6 flex items-center gap-2 shadow-lg"
+                    className="bg-green-500/20 backdrop-blur-md border border-green-400/50 px-6 py-2 rounded-full text-sm font-bold text-green-100 mb-6 flex items-center gap-2 shadow-[0_0_15px_rgba(74,222,128,0.3)]"
                 >
-                    <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse"></span>
-                    #1 Verified Real Estate Platform in Pune
+                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse box-shadow-[0_0_10px_#4ade80]"></span>
+                    ✨ 100% BROKERAGE FREE PLATFORM
                 </motion.div>
 
                 <motion.h1

@@ -1,7 +1,7 @@
 
-import { Builder, Project, Location } from '../types';
+import { Builder, Project, Locality } from '../types';
 
-export const LOCATIONS: Location[] = [
+export const LOCATIONS: Locality[] = [
     { id: '1', name: 'Baner', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=800', projectCount: 45 },
     { id: '2', name: 'Hinjewadi', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800', projectCount: 62 },
     { id: '3', name: 'Wakad', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=800', projectCount: 38 },

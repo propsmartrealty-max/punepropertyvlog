@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Building2, HardHat, LogOut, FileText, Layout, MapPin } from 'lucide-react';
+import { LayoutDashboard, Building2, HardHat, LogOut, FileText, Layout, MapPin, Phone } from 'lucide-react';
 
 const AdminLayout: React.FC<{ children: React.ReactNode, title: string }> = ({ children, title }) => {
     const location = useLocation();
@@ -18,6 +18,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode, title: string }> = ({ c
         { icon: HardHat, label: 'Builders', path: '/admin/builders' },
         { icon: Layout, label: 'Banners', path: '/admin/banners' },
         { icon: MapPin, label: 'Localities', path: '/admin/localities' },
+        { icon: Phone, label: 'Leads', path: '/admin/leads' },
         { icon: LayoutDashboard, label: 'AI Seeder', path: '/admin/seed' },
     ];
 

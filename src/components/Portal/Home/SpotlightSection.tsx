@@ -20,7 +20,7 @@ const SpotlightSection: React.FC<SpotlightSectionProps> = ({ projects }) => {
                 <div className="flex justify-between items-end mb-8">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                            <Star className="w-5 h-5 text-accent-500 fill-accent-500" />
                             <h6 className="text-xs font-bold tracking-widest text-slate-500 uppercase">In Spotlight</h6>
                         </div>
                         <h2 className="text-3xl font-bold text-slate-900">Featured Collections</h2>
@@ -34,6 +34,9 @@ const SpotlightSection: React.FC<SpotlightSectionProps> = ({ projects }) => {
                                 src={project.image}
                                 alt={project.title}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                onError={(e) => {
+                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800';
+                                }}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
@@ -45,7 +48,7 @@ const SpotlightSection: React.FC<SpotlightSectionProps> = ({ projects }) => {
                                 <h3 className="text-2xl font-bold mb-1">{project.title}</h3>
                                 <p className="text-white/80 text-sm mb-3">{project.location}</p>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-bold text-lg text-yellow-400">{project.priceRange}</span>
+                                    <span className="font-bold text-lg text-accent-400">{project.priceRange}</span>
                                     <div className="flex-1" />
                                     <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <ArrowRight className="w-4 h-4" />

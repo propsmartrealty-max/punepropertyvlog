@@ -23,7 +23,12 @@ const BuilderForm = () => {
         totalProjects: 0,
         ongoingProjects: 0,
         heroImage: '',
-        locations: [] // string array
+        locations: [], // string array
+        // Phase 4: Trust Score
+        experience: 0,
+        trustScore: 0,
+        isVerified: false,
+        mobile: ''
     };
 
     const [formData, setFormData] = useState<Builder>(initialFormState);
@@ -51,11 +56,19 @@ const BuilderForm = () => {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
-        setFormData({
-            ...formData,
-            [e.target.name]: value
-        });
+        const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.type === 'number' ? Number(e.target.value) : e.target.value;
+        const name = e.target.name;
+
+        // Specialized handling to avoid type mismatches if generic logic fails
+        if (name === 'isVerified') {
+            // Handled inline in the JSX for boolean, but good to have safety here
+            setFormData(prev => ({ ...prev, isVerified: (e.target as HTMLInputElement).checked }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
     };
 
     const addLocation = () => {
@@ -124,6 +137,34 @@ const BuilderForm = () => {
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
                         <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-2 border rounded-lg" />
+                    </div>
+
+                    {/* Phase 4: Trust Score & Contact */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <div>
+                            <label className="block text-sm font-bold text-blue-900 mb-2">Experience (Years)</label>
+                            <input type="number" name="experience" value={formData.experience} onChange={handleChange} className="w-full px-4 py-2 border border-blue-200 rounded-lg" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-blue-900 mb-2">Trust Score (1-10)</label>
+                            <input type="number" name="trustScore" value={formData.trustScore} onChange={handleChange} min="0" max="10" step="0.1" className="w-full px-4 py-2 border border-blue-200 rounded-lg" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-blue-900 mb-2">Mobile Number</label>
+                            <input type="text" name="mobile" value={formData.mobile} onChange={handleChange} placeholder="+91..." className="w-full px-4 py-2 border border-blue-200 rounded-lg" />
+                        </div>
+                        <div className="flex items-center">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    name="isVerified"
+                                    checked={formData.isVerified}
+                                    onChange={e => setFormData({ ...formData, isVerified: e.target.checked })}
+                                    className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                />
+                                <span className="font-bold text-blue-900">Verified Builder</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div>

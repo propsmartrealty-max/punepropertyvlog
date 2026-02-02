@@ -43,7 +43,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             onChange(url);
         } catch (err: any) {
             console.error(err);
-            setError('Failed to upload image. Please try again.');
+            console.error(err);
+            setError(err.message || 'Failed to upload image. Please try again.');
         } finally {
             setIsProcessing(false);
             if (fileInputRef.current) fileInputRef.current.value = '';

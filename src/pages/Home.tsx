@@ -25,7 +25,7 @@ const Home = () => {
             <div className="min-h-screen bg-slate-50 flex flex-col">
                 <PortalNavbar />
                 <div className="flex-1 flex items-center justify-center">
-                    <ErrorState message={error} onRetry={refreshData} />
+                    <ErrorState message={error.message || 'An error occurred'} onRetry={refreshData} />
                 </div>
                 <Footer />
             </div>

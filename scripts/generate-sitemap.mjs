@@ -17,6 +17,7 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
     console.warn("⚠️  Supabase keys missing. Sitemap generation skipped.");
+    // Exit successfully so build continues
     process.exit(0);
 }
 
@@ -78,4 +79,10 @@ async function generateSitemap() {
     console.log("✅ Sitemap generated at public/sitemap.xml");
 }
 
-generateSitemap();
+// Execute only if run directly
+if (process.argv[1] === import.meta.filename || process.argv[1].endsWith('generate-sitemap.mjs')) {
+    generateSitemap();
+} else {
+    // Just call it anyway since it is a script
+    generateSitemap();
+}

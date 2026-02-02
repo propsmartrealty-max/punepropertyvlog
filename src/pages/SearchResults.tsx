@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import PortalNavbar from '../components/Portal/Navbar';
 import Footer from '../components/Portal/Footer';
@@ -10,13 +10,25 @@ import PropertyCard from '../components/Portal/PropertyCard';
 import { PropertyCardSkeleton, ErrorState } from '../components/UI/LoadingSkeleton';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
+import PriceTrendChart from '../components/Portal/MarketIntelligence/PriceTrendChart';
 
 
 const SearchResults = () => {
     const { search } = useLocation();
+    const { locationSlug } = useParams<{ locationSlug: string }>();
     const queryParams = new URLSearchParams(search);
-    const filterLoc = queryParams.get('location') || '';
+
+    // Parse location from slug (e.g. 'baner-annex' -> 'Baner Annex') or param
+    const derivedLocation = locationSlug
+        ? locationSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+        : (queryParams.get('location') || '');
+
+    const filterLoc = derivedLocation;
     const filterType = queryParams.get('type') || '';
+
+    // Phase 5: Get Locality Data for Market Intelligence
+    const { localities } = useData();
+    const currentLocality = localities.find(l => l.name === filterLoc);
 
     // Page state (we can add pagination UI later, currently just page 1 or load more)
     const [page, setPage] = React.useState(1);
@@ -26,46 +38,46 @@ const SearchResults = () => {
     // However, API might need array support. Our simple API supports single strings. 
     // Let's simple it: If we check a box, we refetch.
 
+    // Local State for filters
     const [selectedBudgets, setSelectedBudgets] = React.useState<string[]>([]);
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]); // "Apartment", "Villa", "Office"
+    const [selectedConfigs, setSelectedConfigs] = React.useState<string[]>([]); // "1 BHK", "2 BHK"
     const [showFilters, setShowFilters] = React.useState(false);
+    const [viewMode, setViewMode] = React.useState<'list' | 'map'>('list');
+
+    // Lazy load map
+    const ProjectMap = React.useMemo(() => React.lazy(() => import('../components/Map/ProjectMap')), []);
 
     // Sync URL type to selectedTypes on mount
     React.useEffect(() => {
         if (filterType && !selectedTypes.includes(filterType)) {
-            // Map "buy", "rent" etc if needed. 
-            // If "type=commercial", we select "Commercial" or specific types?
-            // The user request was "commercial properties should be under commercial section".
-            // Currently type is used for Status (New Launch) in the old code?
-            // "filterType === 'new-launch'". 
-            // But we also have "Asset Type" = Apartment, Villa, Office.
-            // Let's try to Map URL params to our server filters.
+            // Logic to map URL type to state can be added here if needed
         }
     }, [filterType]);
 
-    // Instead of complex syncing, let's construct the API filter object.
-
     // Calculate derived filters
     const typeFilter = selectedTypes.length > 0
-        ? selectedTypes.join(',') // API needs to handle this, currently simple ilike
-        : filterType === 'commercial' ? 'Commercial' // If URL is /search?type=commercial
-            : filterType === 'new-launch' ? '' // 'new-launch' is a status, not type
-                : '';
+        ? selectedTypes.join(',')
+        : filterType === 'commercial' ? 'Commercial'
+            : filterType === 'plots' ? 'Plot'
+                : (filterType === 'buy' || filterType === 'rent') ? 'Residential'
+                    : '';
 
     const statusFilter = filterType === 'new-launch' ? 'New Launch' : '';
 
 
     // React Query for Server-Side Search
-    // We use a key that includes all filter dependencies so it refetches automatically.
-
     const { data, isLoading, error, refetch } = useQuery({
-        queryKey: ['projects', 'search', page, filterLoc, typeFilter, statusFilter, selectedBudgets.join(',')],
+        queryKey: ['projects', 'search', page, filterLoc, typeFilter, statusFilter, selectedBudgets.join(','), selectedConfigs.join(',')],
         queryFn: () => api.projects.list(page, {
             location: filterLoc,
-            type: typeFilter, // Passing "Apartment,Villa" or "Commercial"
-            status: statusFilter
+            type: typeFilter,
+            status: statusFilter,
+            // Passing budget and configs
+            budget: selectedBudgets,
+            configurations: selectedConfigs
         }),
-        placeholderData: (previousData) => previousData, // Keep previous data while fetching new
+        placeholderData: (previousData) => previousData,
     });
 
     const projects = data?.data || [];
@@ -95,19 +107,39 @@ const SearchResults = () => {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             <SEO
-                title={`Properties in ${filterLoc || 'Pune'} - Search Results`}
-                description="Browse verified real estate listings in Pune."
+                title={locationSlug ? `Flats in ${filterLoc} Pune | New Projects & Prices` : `Properties in ${filterLoc || 'Pune'} - Search Results`}
+                description={locationSlug
+                    ? `Looking for flats in ${filterLoc}? Explore top verified new launch projects, pricing, and floor plans in ${filterLoc}, Pune.`
+                    : "Browse verified real estate listings in Pune."}
+                canonical={locationSlug ? `https://punepropertyvlog.in/flats-in-${locationSlug}` : undefined}
             />
             <PortalNavbar />
 
-            <div className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
-                {/* Mobile Filter Toggle */}
-                <button
-                    className="md:hidden w-full mb-4 flex items-center justify-center gap-2 bg-white p-3 rounded-lg shadow-sm font-semibold text-slate-700"
-                    onClick={() => setShowFilters(!showFilters)}
-                >
-                    <Filter className="w-5 h-5" /> {showFilters ? 'Hide Filters' : 'Show Filters'}
-                </button>
+            <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 flex-1 w-full">
+                {/* View Toggles & Filters */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <button
+                        className="md:hidden w-full flex items-center justify-center gap-2 bg-white p-3 rounded-lg shadow-sm font-semibold text-slate-700 border border-slate-200"
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
+                        <Filter className="w-5 h-5" /> {showFilters ? 'Hide Filters' : 'Show Filters'}
+                    </button>
+
+                    <div className="hidden md:flex items-center gap-2 bg-white p-1 rounded-lg border border-slate-200 shadow-sm ml-auto">
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewMode === 'list' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                        >
+                            List View
+                        </button>
+                        <button
+                            onClick={() => setViewMode('map')}
+                            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewMode === 'map' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                        >
+                            Map View
+                        </button>
+                    </div>
+                </div>
 
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Sidebar Filters */}
@@ -119,6 +151,25 @@ const SearchResults = () => {
                             </div>
 
                             <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-3">Configuration</label>
+                                    <div className="space-y-2">
+                                        {['1 BHK', '2 BHK', '3 BHK', '4 BHK', 'Row House'].map(c => (
+                                            <label key={c} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer hover:text-blue-600 transition-colors">
+                                                <input
+                                                    type="checkbox"
+                                                    className="rounded text-blue-600 focus:ring-blue-500 w-4 h-4 border-gray-300"
+                                                    checked={selectedConfigs.includes(c)}
+                                                    onChange={() => toggleFilter(c, selectedConfigs, setSelectedConfigs)}
+                                                />
+                                                {c}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="border-t border-slate-100 my-4"></div>
+
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-3">Budget</label>
                                     <div className="space-y-2">
@@ -158,79 +209,100 @@ const SearchResults = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Phase 5: Market Intelligence Chart (Sidebar) */}
+                        {currentLocality && currentLocality.avgPriceSqft ? (
+                            <div className="mt-6">
+                                <PriceTrendChart
+                                    locationName={currentLocality.name}
+                                    currentPrice={currentLocality.avgPriceSqft}
+                                    appreciationRate={currentLocality.appreciation_rate}
+                                />
+                            </div>
+                        ) : null}
+
                     </aside>
 
                     {/* Results Grid */}
                     <div className="flex-1">
-                        <div className="mb-6">
+                        <div className="mb-6 flex items-center justify-between">
                             <h1 className="text-2xl font-bold text-slate-900">
-                                {isLoading ? 'Searching Properties...' : `${data?.count || 0} Properties found ${filterLoc ? `in ${filterLoc}` : ''}`}
+                                {isLoading ? 'Searching...' : `${data?.count || 0} Properties found ${filterLoc ? `in ${filterLoc}` : ''}`}
                             </h1>
-                            {selectedBudgets.length > 0 && (
-                                <p className="text-sm text-slate-500 mt-1">
-                                    Filters: {selectedBudgets.join(', ')} {selectedTypes.length > 0 && `| ${selectedTypes.join(', ')}`}
-                                </p>
-                            )}
                         </div>
 
-                        {isLoading ? (
-                            <div className="grid grid-cols-1 gap-6">
-                                {Array(3).fill(0).map((_, i) => (
-                                    <div key={i} className="h-full">
-                                        <PropertyCardSkeleton />
-                                    </div>
-                                ))}
+                        {viewMode === 'map' ? (
+                            <div className="w-full h-full min-h-[500px]">
+                                <React.Suspense fallback={<div className="h-96 bg-slate-100 rounded-2xl animate-pulse"></div>}>
+                                    <ProjectMap projects={projects} />
+                                </React.Suspense>
                             </div>
-                        ) : projects.length > 0 ? (
-                            <>
+                        ) : (
+                            isLoading ? (
                                 <div className="grid grid-cols-1 gap-6">
-                                    {projects.map(project => (
-                                        <div key={project.id} className="h-full">
-                                            <PropertyCard project={project} />
+                                    {Array(3).fill(0).map((_, i) => (
+                                        <div key={i} className="h-full">
+                                            <PropertyCardSkeleton />
                                         </div>
                                     ))}
                                 </div>
-                                {/* Simple Pagination */}
-                                {totalPages > 1 && (
-                                    <div className="flex justify-center gap-2 mt-8">
-                                        <button
-                                            disabled={page === 1}
-                                            onClick={() => setPage(p => Math.max(1, p - 1))}
-                                            className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50"
-                                        >
-                                            Previous
-                                        </button>
-                                        <span className="px-4 py-2">Page {page} of {totalPages}</span>
-                                        <button
-                                            disabled={page === totalPages}
-                                            onClick={() => setPage(p => p + 1)}
-                                            className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50"
-                                        >
-                                            Next
-                                        </button>
+                            ) : projects.length > 0 ? (
+                                <>
+                                    <div className="grid grid-cols-1 gap-6">
+                                        {projects.map(project => (
+                                            <div key={project.id} className="h-full">
+                                                <PropertyCard project={project} />
+                                            </div>
+                                        ))}
                                     </div>
-                                )}
-                            </>
-                        ) : (
-                            <div className="bg-white rounded-xl p-12 text-center border border-gray-100 shadow-sm">
-                                <h3 className="text-lg font-bold text-slate-900 mb-2">No properties found</h3>
-                                <p className="text-slate-500">Try adjusting your filters or search criteria.</p>
-                                <button
-                                    onClick={() => {
-                                        setSelectedBudgets([]);
-                                        setSelectedTypes([]);
-                                    }}
-                                    className="mt-4 text-blue-600 font-semibold hover:underline"
-                                >
-                                    Clear all filters
-                                </button>
-                            </div>
+                                    {/* Simple Pagination */}
+                                    {totalPages > 1 && (
+                                        <div className="flex justify-center gap-2 mt-8">
+                                            <button
+                                                disabled={page === 1}
+                                                onClick={() => {
+                                                    setPage(p => Math.max(1, p - 1));
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50"
+                                            >
+                                                Previous
+                                            </button>
+                                            <span className="px-4 py-2">Page {page} of {totalPages}</span>
+                                            <button
+                                                disabled={page === totalPages}
+                                                onClick={() => {
+                                                    setPage(p => p + 1);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50"
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <div className="bg-white rounded-xl p-12 text-center border border-gray-100 shadow-sm">
+                                    <h3 className="text-lg font-bold text-slate-900 mb-2">No properties found</h3>
+                                    <p className="text-slate-500">Try adjusting your filters or search criteria.</p>
+                                    <button
+                                        onClick={() => {
+                                            setSelectedBudgets([]);
+                                            setSelectedTypes([]);
+                                        }}
+                                        className="mt-4 text-blue-600 font-semibold hover:underline"
+                                    >
+                                        Clear all filters
+                                    </button>
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
-            </div>
+            </div >
             <Footer />
-        </div>
+        </div >
     );
 };
 

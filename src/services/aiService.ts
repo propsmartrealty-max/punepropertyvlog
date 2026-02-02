@@ -23,35 +23,43 @@ export const fetchProjectDetailsFromAI = async (query: string): Promise<Partial<
 
     try {
         const prompt = `
-        You are a real estate assistant. Search for the following real estate project in Pune and extract its details:
+        You are a Database Assistant for a Real Estate Application.
+        Your job is to specific factual data about the following project in Pune, India:
         "${query}"
 
-        Return a STRICT JSON object with the following fields (if data is missing, use empty strings or reasonable estimates/TBD):
-        Return a STRICT JSON object with the following fields:
-        {
-            "title": "Project Name",
-            "builderId": "Name of the builder (string)",
-            "location": "Project Location (Area, City)",
-            "priceRange": "Market Range (e.g. ₹85L - ₹1.2Cr)",
-            "exactPrice": "Specific Starting Price (e.g. ₹87.5 Lakhs*)",
-            "configurations": ["2BHK", "3BHK"],
-            "configurationDetails": [
-                { "type": "2 BHK", "carpetArea": "e.g. 750-850 sq.ft", "priceRange": "₹85L - ₹95L" },
-                { "type": "3 BHK", "carpetArea": "e.g. 1050-1150 sq.ft", "priceRange": "₹1.1Cr - ₹1.3Cr" }
-            ],
-            "status": "New Launch" | "Under Construction" | "Ready to Move",
-            "type": "Residential" | "Commercial" | "Plot",
-            "possessionDate": "e.g. Dec 2027",
-            "reraId": "Real RERA Number if avail, else 'Coming Soon'",
-            "description": "A unique, creative, and non-repetitive marketing overview (~100 words). Focus on specific USPs of this project like architectural style, specific amenities, or view.",
-            "metaDescription": "SEO-optimized description (max 160 chars) for Google Results.",
-            "seoKeywords": ["keyword1", "keyword2", "keyword3"],
-            "highlights": ["Why this project? Point 1", "Point 2", "Point 3"],
-            "features": ["Feature 1", "Feature 2", "Feature 3"],
-            "slug": "project-name-location-slug"
-        }
+        RULES:
+        1. **ACCURACY IS PARAMOUNT**. If you do not find the exact RERA ID or Carpet Area, return null or empty string. DO NOT GUESS.
+        2. **RERA ID**: Must start with 'P521' (for Pune) followed by digits. If unsure, omit.
+        3. **PRICING**: Use the most recent 2024/2025 market price.
+        4. **FORMAT**: Return PURE JSON. No markdown.
+        5. **SOURCE TRUTH**: Prioritize data from reliable real estate portals if direct government data is inaccessible.
 
-        Do not include markdown formatting (like \`\`\`json). Just return the raw JSON string.
+        Return this JSON structure:
+        {
+            "title": "Exact Official Project Name",
+            "builderId": "Name of the builder (string)",
+            "location": "Specific Micro-Location (e.g. 'Baner Annex', 'Kharadi', 'Wakad'). Avoid generic 'Pune'.",
+            "priceRange": "e.g. ₹85L - ₹1.2Cr (Market Estimate)",
+            "exactPrice": "Starting Price (e.g. ₹87.5 Lakhs)",
+            "configurations": ["2 BHK", "3 BHK"], 
+            "status": "Under Construction", 
+            "type": "Residential",
+            "possessionDate": "e.g. Dec 2027",
+            "reraId": "P521000vx... (Return NULL if not explicitly found)",
+            "description": "Professional summary (max 100 words).",
+            "metaDescription": "SEO Description.",
+            "seoKeywords": ["keyword1", "keyword2"],
+            "features": ["Amenity 1", "Amenity 2"],
+            "slug": "project-name-location-pune-official", // e.g. 'godrej-rivergreens-manjari-pune'
+            "advancedConfigurations": [
+                {
+                    "name": "2 BHK Classic",
+                    "carpetArea": 0, // Set to 0 if unknown. DO NOT ESTIMATE.
+                    "basePrice": 0,  // Set to 0 if unknown.
+                    "bathrooms": 2
+                }
+            ]
+        }
         `;
 
         console.log("Sending prompt to Gemini...");

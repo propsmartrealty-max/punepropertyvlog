@@ -52,7 +52,7 @@ const Dashboard = () => {
             </div>
 
             <h3 className="text-lg font-bold mb-4">Recent Projects</h3>
-            <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+            <div className="bg-white border border-gray-100 rounded-xl overflow-x-auto">
                 <table className="w-full text-left text-sm text-slate-600">
                     <thead className="bg-slate-50 border-b border-gray-100">
                         <tr>

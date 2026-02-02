@@ -64,11 +64,23 @@ const AdminBanners = () => {
     const handleDelete = async (id: string, imageUrl: string) => {
         if (!confirm('Delete this banner?')) return;
 
-        // Convert URL to path for storage deletion if needed (ImageUpload handles individual delete, but removing row should verify)
-        // Ideally we delete from storage too. relying on 'ImageUpload' implementation for now or manual cleanup.
+        // Cleanup storage
+        try {
+            if (imageUrl) {
+                const { deleteFile } = await import('../../services/storageService');
+                await deleteFile(imageUrl);
+            }
+        } catch (error) {
+            console.error("Error deleting image from storage:", error);
+            // Continue to delete record even if storage fails
+        }
 
-        await supabase.from('banners').delete().eq('id', id);
-        fetchBanners();
+        const { error } = await supabase.from('banners').delete().eq('id', id);
+        if (error) {
+            alert("Failed to delete banner");
+        } else {
+            fetchBanners();
+        }
     };
 
     const handleUpdate = async (id: string, updates: Partial<Banner>) => {
