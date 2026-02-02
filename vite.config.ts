@@ -3,7 +3,13 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
+  // 1. Load env from .env files (for local dev)
+  const envFile = loadEnv(mode, '.', '');
+
+  // 2. Merge with system env vars (for Vercel/CI) which might not be in a file
+  // We prioritize system vars (process.env) over .env file vars
+  const env = { ...envFile, ...process.env };
+
   return {
     server: {
       port: 3000,
@@ -12,12 +18,13 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     define: {
       // Explicitly expose Env Vars to ensure they are available in the client bundle
-      'process.env': {
-        ...env
-      },
-      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
-      'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY),
-      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY)
+      // We use JSON.stringify to ensure strings are properly quoted for replacement
+      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL || ''),
+      'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY || ''),
+      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || ''),
+
+      // Polyfill process.env for older libraries if needed
+      'process.env': JSON.stringify(env)
     },
     resolve: {
       alias: {
