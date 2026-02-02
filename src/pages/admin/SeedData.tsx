@@ -340,7 +340,7 @@ const getMockProject = (name: string, type: string, builder: string) => ({
 });
 
 const SeedData = () => {
-    const { addProject, addBuilder } = useData();
+    // const { addProject, addBuilder } = useData(); // Refactored to use direct supabase upsert check below
     const [logs, setLogs] = useState<string[]>([]);
     const [isSeeding, setIsSeeding] = useState(false);
     const [progress, setProgress] = useState(0);
