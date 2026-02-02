@@ -30,6 +30,19 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, '.'),
       }
+    },
+    build: {
+      chunkSizeWarningLimit: 1000, // Increase limit to suppress warnings
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Split vendor code into separate chunks for better caching
+            vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+            maps: ['leaflet', 'react-leaflet', 'react-leaflet-cluster'],
+            ui: ['lucide-react', 'clsx', 'tailwind-merge']
+          }
+        }
+      }
     }
   };
 });
