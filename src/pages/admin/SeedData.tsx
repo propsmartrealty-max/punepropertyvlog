@@ -394,34 +394,40 @@ const SeedData = () => {
                 }
 
                 try {
-                    await addBuilder({
-                        id: '',
-                        name: builderData.name || builderSeed.name,
-                        slug: builderData.slug || builderSeed.name.toLowerCase().replace(/ /g, '-'),
-                        logo: builderData.logo,
-                        heroImage: builderData.heroImage || '',
-                        description: builderData.description,
-                        establishedYear: builderData.establishedYear || 2000,
-                        totalProjects: builderData.totalProjects || 10,
-                        ongoingProjects: builderData.ongoingProjects || 2,
-                        locations: ['Pune']
-                    });
+                    // Use Upsert for Builder
+                    const { supabase } = await import('../../services/supabase');
+                    const { error } = await supabase
+                        .from('builders')
+                        .upsert({
+                            name: builderData.name || builderSeed.name,
+                            slug: builderData.slug || builderSeed.name.toLowerCase().replace(/ /g, '-'),
+                            logo: builderData.logo,
+                            hero_image: builderData.heroImage || '',
+                            description: builderData.description,
+                            total_projects: builderData.totalProjects || 10,
+                            ongoing_projects: builderData.ongoingProjects || 2,
+                            locations: ['Pune'],
+                            // Map camelCase to snake_case for DB
+                            established_year: builderData.establishedYear || 2000
+                        }, { onConflict: 'slug' });
 
-                    builderId = builderData.name || builderSeed.name;
+                    if (error) throw error;
+
+                    builderId = builderData.name || builderSeed.name; // In real app, fetch ID. Here we use name/slug as reference if needed but better to query.
+
+                    // Fetch the actual ID for connecting projects
+                    const { data: bData } = await supabase.from('builders').select('id').eq('slug', builderData.slug || builderSeed.name.toLowerCase().replace(/ /g, '-')).single();
+                    if (bData) builderId = bData.id;
+
                     log(`✅ Added/Updated Builder: ${builderSeed.name}`);
                 } catch (e: any) {
-                    if (e.message.includes('unique constraint') || e.message.includes('duplicate')) {
-                        log(`ℹ️ Builder ${builderSeed.name} exists. Skipping.`);
-                        builderId = builderSeed.name;
-                    } else {
-                        log(`❌ DB Error ${builderSeed.name}: ${e.message}`);
-                        builderId = builderSeed.name;
-                    }
+                    log(`❌ DB Error ${builderSeed.name}: ${e.message}`);
+                    builderId = ''; // Skip projects if builder failed
                 }
                 updateProgress();
 
                 // B. Process Projects for this Builder
-                if (builderSeed.projects && builderSeed.projects.length > 0) {
+                if (builderId && builderSeed.projects && builderSeed.projects.length > 0) {
                     for (let j = 0; j < builderSeed.projects.length; j++) {
                         const projSeed = builderSeed.projects[j];
                         // Assert type safely if missing in seed data
@@ -439,38 +445,37 @@ const SeedData = () => {
                         }
 
                         try {
-                            // Upsert Logic to handle duplicates gracefully
-                            await addProject({
-                                id: '',
-                                title: projData.title || projSeed.name,
-                                slug: projData.slug || projSeed.name.toLowerCase().replace(/ /g, '-'),
-                                builderId: builderId,
-                                location: seedLocation,
-                                priceRange: projData.priceRange || 'Contact for Price',
-                                configurations: projData.configurations || ['2 BHK', '3 BHK'],
-                                status: (projData.status as any) || 'New Launch',
-                                type: (projData.type as any) || seedType,
-                                possessionDate: projData.possessionDate || '2027',
+                            // Upsert Logic for Projects
+                            const { supabase } = await import('../../services/supabase');
+                            const { error: pError } = await supabase
+                                .from('projects')
+                                .upsert({
+                                    title: projData.title || projSeed.name,
+                                    slug: projData.slug || projSeed.name.toLowerCase().replace(/ /g, '-'),
+                                    builder_id: builderId,
+                                    location: seedLocation,
+                                    price_range: projData.priceRange || 'Contact for Price',
+                                    configurations: projData.configurations || ['2 BHK', '3 BHK'],
+                                    status: (projData.status as any) || 'New Launch',
+                                    type: (projData.type as any) || seedType,
+                                    possession_date: projData.possessionDate || '2027',
+                                    image: CURATED_PROJECT_IMAGES[Math.floor(Math.random() * CURATED_PROJECT_IMAGES.length)],
+                                    description: projData.description || `${seedType} project by ${builderSeed.name}.`,
+                                    features: projData.features || ['Security', 'Power Backup'],
+                                    specs: [],
+                                    rera_id: projData.reraId || 'Pending RERA',
+                                    exact_price: projData.exactPrice || 0,
+                                    price_type: 'L',
+                                    seo_keywords: projData.seoKeywords || [`${projSeed.name} pune`, `${seedType} in ${seedLocation}`, 'luxury homes pune'],
+                                    meta_description: projData.metaDescription || `Explore ${projSeed.name} in ${seedLocation}.`,
+                                    configuration_details: projData.configurationDetails || []
+                                }, { onConflict: 'slug' });
 
-                                image: CURATED_PROJECT_IMAGES[Math.floor(Math.random() * CURATED_PROJECT_IMAGES.length)],
-                                description: projData.description || `${seedType} project by ${builderSeed.name}.`,
-                                features: projData.features || ['Security', 'Power Backup'],
-                                specs: [],
-                                reraId: projData.reraId || 'Pending RERA',
-                                exactPrice: projData.exactPrice || 0,
-                                priceType: 'L' as 'L' | 'Cr',
-                                seoKeywords: projData.seoKeywords || [`${projSeed.name} pune`, `${seedType} in ${seedLocation}`, 'luxury homes pune'],
-                                metaDescription: projData.metaDescription || `Explore ${projSeed.name} in ${seedLocation}. Premium ${seedType} offering world-class amenities.`,
-                                configurationDetails: projData.configurationDetails || []
-                            });
+                            if (pError) throw pError;
+
                             log(`  ✅ Added/Updated Project: ${projSeed.name}`);
                         } catch (e: any) {
-                            if (e.message.includes('unique constraint') || e.message.includes('duplicate')) {
-                                log(`  ℹ️ Project ${projSeed.name} already exists. Updated.`);
-                            } else {
-                                console.error(e);
-                                log(`  ❌ Failed Project ${projSeed.name}: ${e.message}`);
-                            }
+                            log(`  ❌ Failed Project ${projSeed.name}: ${e.message}`);
                         }
                         updateProgress();
 
