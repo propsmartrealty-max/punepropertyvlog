@@ -355,6 +355,11 @@ const SeedData = () => {
         try {
             log("🚀 Starting Seeding Process...");
 
+            // DIAGNOSTICS: Check if Env Vars are loaded
+            const sbUrl = import.meta.env.VITE_SUPABASE_URL || 'MISSING';
+            log(`🔎 Connection Check: ${sbUrl.includes('placeholder') ? '❌ USING PLACEHOLDER (Bad)' : '✅ Using Real URL'}`);
+            log(`🔎 URL prefix: ${sbUrl.substring(0, 12)}...`);
+
             const totalSteps = SEED_DATA.length + SEED_DATA.reduce((acc, b) => acc + b.projects.length, 0);
             let currentStep = 0;
             const updateProgress = () => setProgress(Math.round((++currentStep / totalSteps) * 100));
