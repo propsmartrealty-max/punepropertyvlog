@@ -29,18 +29,19 @@ const HeroSearch = () => {
 
     // Fetch Banners from Supabase
     useEffect(() => {
-        const fetchBanners = async () => {
+        const fetchBackgrounds = async () => {
+            const { supabase } = await import('../../../services/supabase');
             const { data } = await supabase
                 .from('banners')
-                .select('imageUrl')
+                .select('image_url')
                 .eq('isActive', true)
-                .order('sortorder', { ascending: true });
+                .order('sortorder');
 
             if (data && data.length > 0) {
-                setHeroImages(data.map(b => b.imageUrl));
+                setHeroImages(data.map(b => b.image_url));
             }
         };
-        fetchBanners();
+        fetchBackgrounds();
     }, []);
 
     // Auto-rotate background

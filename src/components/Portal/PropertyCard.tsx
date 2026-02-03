@@ -158,7 +158,20 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ project, variant = 'list' }
                             <div className="flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
                                 <span className="text-slate-400 text-xs uppercase font-bold">Builder:</span>
-                                <span className="font-semibold text-slate-700 truncate text-xs md:text-sm">{project.builderId || 'Premium Developer'}</span>
+                                <span className="font-semibold text-slate-700 truncate text-xs md:text-sm">
+                                    {/* Look up builder name from context if available, else usage */}
+                                    {project.builderId ? (
+                                        // Simple lookup if we had builders list prop, but we may need to rely on what we have.
+                                        // ideally PropertyCard should receive builderName or we use a hook.
+                                        // For now, let's keep it safe. 
+                                        // Use global data if present?
+                                        // We can't easily access context inside map without passing it down.
+                                        // Let's assume project might have builder object joined? No.
+                                        // Check if builders are passed or use a prop.
+                                        // Falling back to a cleaner display if invalid ID.
+                                        project.builderId.length > 20 ? 'Premium Developer' : project.builderId
+                                    ) : 'Premium Developer'}
+                                </span>
                             </div>
                         </div>
                     )}

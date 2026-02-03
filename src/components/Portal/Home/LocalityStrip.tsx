@@ -27,11 +27,12 @@ const LocalityStrip = () => {
 
             if (data && data.length > 0) {
                 // Map DB columns to UI shape if needed, or just use as is
-                const mapped = data.map(l => ({
+                const mapped = data.map((l, index) => ({
                     name: l.name,
-                    image: l.imageUrl,
-                    price: l.averagePrice,
-                    count: l.projectCount
+                    // Try image_url, imageUrl, or fallback to the default list by index/random
+                    image: l.image_url || l.imageUrl || DEFAULT_LOCALITIES[index % DEFAULT_LOCALITIES.length].image,
+                    price: l.avgPriceSqft ? `₹${(l.avgPriceSqft / 1000).toFixed(1)}k/sq.ft` : (l.averagePrice || 'N/A'), // Fix price key mapping
+                    count: l.projectCount || 0
                 }));
                 setLocalities(mapped);
             }
