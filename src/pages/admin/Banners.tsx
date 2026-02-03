@@ -46,6 +46,7 @@ const AdminBanners = () => {
             setBanners(data.map((b: any) => ({
                 ...b,
                 imageUrl: b.image_url, // Map from snake_case column
+                isActive: b.is_active, // Map from snake_case column
                 sortOrder: b.sortorder || b.sortOrder
             })));
         }
@@ -60,7 +61,7 @@ const AdminBanners = () => {
             title: newBanner.title,
             image_url: newBanner.imageUrl, // Map to snake_case column
             link: newBanner.link,
-            isActive: newBanner.isActive,
+            is_active: newBanner.isActive, // Map to snake_case column
             sortorder: banners.length
         }]);
 
@@ -99,6 +100,13 @@ const AdminBanners = () => {
     const handleUpdate = async (id: string, updates: Partial<Banner>) => {
         // Map updates to db column names
         const dbUpdates: any = { ...updates };
+
+        // Map isActive to snake_case
+        if (updates.isActive !== undefined) {
+            dbUpdates.is_active = updates.isActive;
+            delete dbUpdates.isActive;
+        }
+
         if (updates.sortOrder !== undefined) {
             dbUpdates.sortorder = updates.sortOrder;
             delete dbUpdates.sortOrder;

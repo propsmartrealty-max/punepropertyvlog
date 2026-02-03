@@ -34,7 +34,7 @@ const HeroSearch = () => {
             const { data } = await supabase
                 .from('banners')
                 .select('image_url')
-                .eq('isActive', true)
+                .eq('is_active', true)
                 .order('sortorder');
 
             if (data && data.length > 0) {
