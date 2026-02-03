@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   AreaChart,
   Area
@@ -26,7 +26,7 @@ const DashboardPreview: React.FC = () => {
     leadScore: 92.4,
     predictiveRev: 14.2
   });
-  const [feed, setFeed] = useState<{id: number, text: string, time: string, icon: React.ReactNode}[]>([]);
+  const [feed, setFeed] = useState<{ id: number, text: string, time: string, icon: React.ReactNode }[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -62,43 +62,43 @@ const DashboardPreview: React.FC = () => {
             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
             <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
           </div>
-          <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest">PROPSMART v4.2.0</span>
+          <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest">PUNE PROPERTY VLOG v1.0</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 bg-teal-500 rounded-full animate-pulse" />
           <span className="text-teal-500 text-[10px] font-black uppercase tracking-widest">Live Engine</span>
         </div>
       </div>
-      
+
       <div className="p-8 flex-1 flex flex-col gap-6 overflow-hidden">
         <div className="h-40 w-full shrink-0 min-h-[160px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={INITIAL_SALES_DATA}>
               <defs>
                 <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#14B8A6" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#14B8A6" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#14B8A6" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#14B8A6" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="month" hide />
               <YAxis hide />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="sales" 
-                stroke="#14B8A6" 
-                strokeWidth={3} 
-                fillOpacity={1} 
-                fill="url(#colorSales)" 
+              <Area
+                type="monotone"
+                dataKey="sales"
+                stroke="#14B8A6"
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorSales)"
                 animationDuration={1500}
               />
             </AreaChart>
           </ResponsiveContainer>
         </div>
-        
+
         <div className="grid grid-cols-3 gap-3 shrink-0">
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-center">
             <p className="text-[7px] font-black text-slate-400 uppercase mb-1">AI Match</p>

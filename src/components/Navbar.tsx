@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
       <nav className={`transition-all duration-500 ${isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-2xl py-3 border-b border-slate-100' : 'bg-transparent py-7'}`}>
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
           <div className="flex justify-between items-center">
-            
+
             {/* Structured Logo Layout */}
             <div className="flex-shrink-0">
               <a href="#hero" onClick={(e) => handleLinkClick(e, '#hero')} className="flex items-center gap-4 group">
@@ -76,7 +76,7 @@ const Navbar: React.FC = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className={`text-2xl font-black tracking-tighter transition-colors duration-500 leading-none ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
-                    PROPSMART<span className="text-teal-500">REALTY</span>
+                    PUNE PROPERTY <span className="text-teal-500">VLOG</span>
                   </span>
                   <div className="flex items-center gap-1.5 mt-1">
                     <span className="h-[1px] w-3 bg-teal-500/50"></span>
@@ -103,7 +103,7 @@ const Navbar: React.FC = () => {
                   </a>
                 ))}
               </div>
-              
+
               {/* Secondary Actions Area */}
               <div className="flex items-center gap-4 border-l border-white/10 pl-10">
                 <a
@@ -132,8 +132,8 @@ const Navbar: React.FC = () => {
         <div className={`lg:hidden absolute w-full bg-white shadow-2xl transition-all duration-500 ease-in-out overflow-hidden border-t border-slate-100 ${isOpen ? 'max-h-screen opacity-100 py-10' : 'max-h-0 opacity-0 pointer-events-none'}`}>
           <div className="px-10 space-y-3">
             <div className="flex items-center gap-2 mb-8 ml-2">
-                <LayoutGrid size={14} className="text-teal-500" />
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Site Directory</p>
+              <LayoutGrid size={14} className="text-teal-500" />
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Site Directory</p>
             </div>
             {navLinks.map((link) => (
               <a
@@ -146,23 +146,23 @@ const Navbar: React.FC = () => {
                 <ChevronRight size={16} className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-teal-500" />
               </a>
             ))}
-            
+
             <div className="pt-10 mt-6 border-t border-slate-100 space-y-8">
-               <div className="px-8 grid grid-cols-1 gap-6">
-                  <div className="flex items-center gap-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                    <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-teal-500">
-                        <Phone size={14} />
-                    </div>
-                    +91 77440 09295
+              <div className="px-8 grid grid-cols-1 gap-6">
+                <div className="flex items-center gap-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                  <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-teal-500">
+                    <Phone size={14} />
                   </div>
-                  <div className="flex items-center gap-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                    <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-teal-500">
-                        <Mail size={14} />
-                    </div>
-                    salesmandate@propsmart.digital
+                  +91 77440 09295
+                </div>
+                <div className="flex items-center gap-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                  <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-teal-500">
+                    <Mail size={14} />
                   </div>
-               </div>
-               <a
+                  salesmandate@propsmart.digital
+                </div>
+              </div>
+              <a
                 href="#contact"
                 onClick={(e) => handleLinkClick(e, '#contact')}
                 className="flex items-center justify-center gap-4 w-full bg-slate-900 text-white py-6 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.3em] shadow-xl active:scale-95"

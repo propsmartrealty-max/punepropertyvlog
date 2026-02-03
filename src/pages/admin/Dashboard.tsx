@@ -7,6 +7,17 @@ import { Building2, HardHat, TrendingUp, Loader2 } from 'lucide-react';
 const Dashboard = () => {
     const { projects, builders, isLoading } = useData();
 
+    const [leadsCount, setLeadsCount] = React.useState<number | null>(null);
+
+    React.useEffect(() => {
+        const fetchStats = async () => {
+            const { supabase } = await import('../../services/supabase');
+            const { count } = await supabase.from('leads').select('*', { count: 'exact', head: true });
+            setLeadsCount(count || 0);
+        };
+        fetchStats();
+    }, []);
+
     if (isLoading) {
         return (
             <AdminLayout title="Dashboard Overview">
@@ -42,12 +53,12 @@ const Dashboard = () => {
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-slate-500 font-medium">Total Views</h3>
+                        <h3 className="text-slate-500 font-medium">Total Leads</h3>
                         <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
                             <TrendingUp className="w-6 h-6" />
                         </div>
                     </div>
-                    <p className="text-3xl font-bold text-slate-900">1.2k</p>
+                    <p className="text-3xl font-bold text-slate-900">{leadsCount !== null ? leadsCount : '...'}</p>
                 </div>
             </div>
 

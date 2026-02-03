@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  LogOut, 
-  ShieldCheck, 
-  Globe, 
-  Pencil, 
-  Lock, 
-  Zap, 
-  AlertCircle, 
-  MapPin, 
+import {
+  LayoutDashboard,
+  Users,
+  LogOut,
+  ShieldCheck,
+  Globe,
+  Pencil,
+  Lock,
+  Zap,
+  AlertCircle,
+  MapPin,
   Filter
 } from 'lucide-react';
-import { 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area 
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area
 } from 'recharts';
 
-const AdminDashboard: React.FC<{ 
-  onLogout: () => void, 
+const AdminDashboard: React.FC<{
+  onLogout: () => void,
   leads: any[],
   siteContent: any,
   setSiteContent: (c: any) => void,
@@ -35,7 +35,7 @@ const AdminDashboard: React.FC<{
           <div className="flex items-center gap-3 mb-10">
             <ShieldCheck size={24} className="text-teal-500" />
             <div className="flex flex-col">
-              <span className="font-black text-base uppercase leading-none">PROPSMART</span>
+              <span className="font-black text-base uppercase leading-none">PUNE PROPERTY VLOG</span>
               <span className="text-[8px] font-black text-teal-500 uppercase tracking-widest mt-1">HQ Console</span>
             </div>
           </div>
@@ -46,9 +46,9 @@ const AdminDashboard: React.FC<{
               { id: 'cms', icon: <Pencil size={18} />, label: 'CMS' },
               { id: 'seo', icon: <Globe size={18} />, label: 'SEO' },
             ].map((item) => (
-              <button 
-                key={item.id} 
-                onClick={() => setActiveTab(item.id)} 
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === item.id ? 'bg-teal-500 text-white' : 'text-slate-500 hover:bg-white/5 hover:text-white'}`}
               >
                 {item.icon} {item.label}
@@ -70,7 +70,7 @@ const AdminDashboard: React.FC<{
         <header className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-2xl font-black uppercase tracking-tighter">{activeTab}</h1>
-            <p className="text-slate-500 text-xs font-medium uppercase tracking-widest">PropSmart Mandate Hub</p>
+            <p className="text-slate-500 text-xs font-medium uppercase tracking-widest">Pune Property Vlog Admin</p>
           </div>
           <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 flex items-center gap-2">
             <Zap size={14} className="text-teal-500" />

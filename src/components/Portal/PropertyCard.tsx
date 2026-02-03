@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, ArrowRight, Home, CheckCircle2, Building2 } from 'lucide-react';
+import { MapPin, Home, CheckCircle2, Building2 } from 'lucide-react';
 import { Project } from '../../types';
 import { useData } from '../../context/DataContext';
 import DealBadge from './DealBadge';
 import LeadForm from './LeadForm';
+import { getOptimizedImageUrl } from '../../utils/imageUtils';
 
 interface PropertyCardProps {
     project: Project;
@@ -30,7 +31,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ project, variant = 'list' }
         // Fallback if useData is not available
     }
     // Use first image or fallback
-    const displayImage = project.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800';
+    const displayImage = getOptimizedImageUrl(project.image, 600);
 
     const [showLeadForm, setShowLeadForm] = useState(false);
 

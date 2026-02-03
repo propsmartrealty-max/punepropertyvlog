@@ -46,6 +46,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Create a client
 const queryClient = new QueryClient();
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
@@ -54,6 +56,7 @@ function App() {
                     <GlobalErrorBoundary>
                         <Router>
                             <ScrollToTop />
+                            <Toaster position="top-center" />
                             <React.Suspense fallback={<LoadingFallback />}>
                                 <CompareFloatingBar />
                                 <Routes>

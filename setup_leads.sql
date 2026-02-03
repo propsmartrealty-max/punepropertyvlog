@@ -16,6 +16,12 @@ create table if not exists leads (
 -- Enable RLS
 alter table leads enable row level security;
 
+-- 0. DROP existing policies to prevent "already exists" errors
+DROP POLICY IF EXISTS "Enable insert for everyone" ON leads;
+DROP POLICY IF EXISTS "Enable read for everyone" ON leads;
+DROP POLICY IF EXISTS "Enable update for everyone" ON leads;
+DROP POLICY IF EXISTS "Enable delete for everyone" ON leads;
+
 -- Policy: Allow public to insert (Post Property form)
 create policy "Enable insert for everyone" on leads for insert with check (true);
 

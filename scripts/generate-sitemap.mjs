@@ -76,6 +76,27 @@ async function generateSitemap() {
             });
         });
 
+        // 4. Localities (High Value SEO Pages)
+        // Convert name 'Baner Annex' -> 'baner-annex'
+        const { data: localities, error: lError } = await supabase
+            .from('localities')
+            // Using createdAt as hinted by Postgres error
+            .select('name, createdAt');
+
+        if (lError) throw lError;
+
+        localities?.forEach(loc => {
+            if (loc.name) {
+                const slug = loc.name.toLowerCase().replace(/\s+/g, '-');
+                smStream.write({
+                    url: `/flats-in-${slug}`,
+                    changefreq: 'weekly',
+                    priority: 0.85,
+                    lastmod: loc.createdAt
+                });
+            }
+        });
+
     } catch (err) {
         console.error("❌ Error fetching data for sitemap:", err);
     }

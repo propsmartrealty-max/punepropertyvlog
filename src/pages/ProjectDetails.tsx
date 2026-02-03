@@ -14,6 +14,7 @@ import PricingCalculator from '../components/Portal/Project/PricingCalculator';
 import { DetailSkeleton, ErrorState } from '../components/UI/LoadingSkeleton';
 import DealBadge from '../components/Portal/DealBadge';
 import PriceTrendChart from '../components/Portal/MarketIntelligence/PriceTrendChart';
+import { getOptimizedImageUrl } from '../utils/imageUtils';
 
 
 
@@ -225,7 +226,7 @@ const ProjectDetails = () => {
             {/* Hero Image & Header */}
             <div className="relative h-[450px] md:h-[550px] w-full group">
                 <img
-                    src={project.image}
+                    src={getOptimizedImageUrl(project.image, 1200)}
                     alt={project.title}
                     // @ts-ignore
                     fetchPriority="high"
@@ -488,7 +489,7 @@ const ProjectDetails = () => {
                         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
                             <div className="flex flex-col md:flex-row gap-8 items-start">
                                 <img
-                                    src={builder?.logo || 'https://ui-avatars.com/api/?name=Developer&background=random'}
+                                    src={getOptimizedImageUrl(builder?.logo || 'https://ui-avatars.com/api/?name=Developer&background=random', 200)}
                                     alt={builder?.name || 'Developer'}
                                     className="w-32 h-32 object-contain p-4 bg-white rounded-xl border border-slate-100 shadow-sm"
                                 />

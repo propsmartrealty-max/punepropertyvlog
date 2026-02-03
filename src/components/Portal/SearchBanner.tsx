@@ -50,7 +50,7 @@ const SearchBanner = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "outCirc" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                     className="text-center"
                 >
                     <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-blue-200 text-sm font-semibold mb-6 shadow-lg">

@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { toast } from 'react-hot-toast';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { supabase } from '../../services/supabase';
 
-import { Trash2, Phone, Search } from 'lucide-react';
+import { Trash2, Phone } from 'lucide-react';
+import DeleteConfirmationModal from '../../components/Admin/DeleteConfirmationModal';
 
-// Define a local interface for display purposes
+// Define the interface locally or import it
 interface EnrichedLead {
     id: string;
+    createdAt: string;
     name: string;
     mobile: string;
-    email?: string;
     type: string;
     propertyType: string;
     location: string;
     price: string;
-    message: string;
     status: string;
-    createdAt: string;
 }
-
-import DeleteConfirmationModal from '../../components/Admin/DeleteConfirmationModal';
 
 const AdminLeads = () => {
     const [leads, setLeads] = useState<EnrichedLead[]>([]);
@@ -30,7 +28,7 @@ const AdminLeads = () => {
         name: ''
     });
 
-    const fetchLeads = async () => {
+    const fetchLeads = useCallback(async () => {
         const { data, error } = await supabase
             .from('leads')
             .select('*, projects(title, location)')
@@ -43,27 +41,23 @@ const AdminLeads = () => {
         if (data) {
             const mappedLeads: EnrichedLead[] = data.map((item: any) => ({
                 id: item.id,
+                createdAt: item.created_at,
                 name: item.name,
-                mobile: item.mobile,
-                email: item.email,
-                type: item.type,
-                // Logic: Project Title > Metadata Project > Metadata Property Type > General
-                propertyType: item.projects?.title || item.metadata?.project || item.metadata?.property_type || 'General Inquiry',
-                // Logic: Project Location > Metadata Location > Default
-                location: item.projects?.location || item.metadata?.location || 'Pune',
-                price: item.metadata?.price || '-',
-                message: item.metadata?.message || '',
-                status: item.status,
-                createdAt: item.created_at
+                mobile: item.phone || item.mobile, // Handle schema variations
+                type: item.type || 'Inquiry',
+                propertyType: item.config || 'Unknown',
+                location: item.projects?.location || item.project_name || 'General',
+                price: item.budget || '-',
+                status: item.status || 'New'
             }));
             setLeads(mappedLeads);
         }
         setLoading(false);
-    };
+    }, []);
 
     useEffect(() => {
         fetchLeads();
-    }, []);
+    }, [fetchLeads]);
 
     const openDeleteModal = (id: string, name: string) => {
         setDeleteModal({ isOpen: true, id, name });
@@ -84,7 +78,7 @@ const AdminLeads = () => {
 
         if (error) {
             console.error('Error updating status:', error);
-            alert('Failed to update status');
+            toast.error('Failed to update status');
         } else {
             // Optimistic update or refetch
             fetchLeads();

@@ -33,7 +33,11 @@ const LeadForm: React.FC<LeadFormProps> = ({ isOpen, onClose, type, projectTitle
                 project_id: projectId, // Can be ID or Slug
                 metadata: {
                     source: window.location.pathname,
-                    project: projectTitle
+                    project: projectTitle,
+                    utm_source: new URLSearchParams(window.location.search).get('utm_source'),
+                    utm_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+                    utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign'),
+                    utm_term: new URLSearchParams(window.location.search).get('utm_term')
                 }
             }]);
 

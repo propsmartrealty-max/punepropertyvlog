@@ -34,7 +34,7 @@ const HeroSearch = () => {
                 .from('banners')
                 .select('imageUrl')
                 .eq('isActive', true)
-                .order('sortOrder', { ascending: true });
+                .order('sortorder', { ascending: true });
 
             if (data && data.length > 0) {
                 setHeroImages(data.map(b => b.imageUrl));

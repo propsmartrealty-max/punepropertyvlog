@@ -1,4 +1,4 @@
-// @ts-ignore
+// Google GenAI SDK type definitions might be missing in this environment
 import { GoogleGenAI } from "@google/genai";
 import { Project, Builder } from "../types";
 
@@ -12,7 +12,7 @@ export type AIProjectDetails = Omit<Project, 'id'>;
 export type AIBuilderDetails = Omit<Builder, 'id' | 'locations'>; // Locations inferred from projects usually
 
 export const fetchProjectDetailsFromAI = async (query: string): Promise<Partial<AIProjectDetails>> => {
-    console.log("Starting AI fetch for query:", query);
+
 
     // Debug API Key presence (do not log full key)
     if (!apiKey) console.error("API Key is missing/empty");
@@ -62,7 +62,7 @@ export const fetchProjectDetailsFromAI = async (query: string): Promise<Partial<
         }
         `;
 
-        console.log("Sending prompt to Gemini...");
+
         const response = await client.models.generateContent({
             model: "gemini-flash-latest",
             contents: [{ parts: [{ text: prompt }] }]

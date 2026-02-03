@@ -96,7 +96,7 @@ const PriceTrendChart: React.FC<PriceTrendChartProps> = ({ locationName, current
             </div>
 
             <div className="mt-4 flex justify-between items-center text-xs text-slate-400 border-t border-slate-50 pt-4">
-                <span>Data Source: PropSmart Market Intelligence</span>
+                <span>Data Source: Pune Property Vlog Market Intelligence</span>
                 <span>Updated: {new Date().toLocaleString('default', { month: 'short', year: 'numeric' })}</span>
             </div>
         </div>

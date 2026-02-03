@@ -130,6 +130,6 @@ export interface Lead {
   type: string; // 'Site Visit', 'Brochure', 'Callback'
   project_id?: string;
   status: 'New' | 'Contacted' | 'Closed' | 'Invalid';
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   created_at?: string;
 }

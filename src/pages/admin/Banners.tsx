@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { supabase } from '../../services/supabase';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import ImageUpload from '../../components/Admin/ImageUpload';
@@ -36,24 +37,34 @@ const AdminBanners = () => {
         const { data, error } = await supabase
             .from('banners')
             .select('*')
-            .order('sortOrder', { ascending: true });
+            .order('sortorder', { ascending: true }); // Postgres lowercases unquoted columns
 
-        if (data) setBanners(data);
+        if (data) {
+            // Map sortorder (db) to sortOrder (state) if needed, or just rely on JS flexibility 
+            // type assertion or mapping
+            setBanners(data.map((b: any) => ({
+                ...b,
+                sortOrder: b.sortorder || b.sortOrder
+            })));
+        }
         setIsLoading(false);
     };
 
     const handleAddBanner = async () => {
-        if (!newBanner.imageUrl) return alert("Image is required");
+        if (!newBanner.imageUrl) return toast.error("Image is required");
         setIsSaving(true);
 
         const { error } = await supabase.from('banners').insert([{
-            ...newBanner,
-            sortOrder: banners.length // Append to end
+            title: newBanner.title,
+            imageUrl: newBanner.imageUrl,
+            link: newBanner.link,
+            isActive: newBanner.isActive,
+            sortorder: banners.length // Note: using lowercase column name
         }]);
 
         if (error) {
-            alert('Failed to add banner');
             console.error(error);
+            toast.error(error.message);
         } else {
             setNewBanner({ title: '', imageUrl: '', link: '', isActive: true, sortOrder: 0 });
             fetchBanners();
@@ -77,14 +88,21 @@ const AdminBanners = () => {
 
         const { error } = await supabase.from('banners').delete().eq('id', id);
         if (error) {
-            alert("Failed to delete banner");
+            toast.success('Banner deleted successfully');
         } else {
             fetchBanners();
         }
     };
 
     const handleUpdate = async (id: string, updates: Partial<Banner>) => {
-        await supabase.from('banners').update(updates).eq('id', id);
+        // Map updates to db column names
+        const dbUpdates: any = { ...updates };
+        if (updates.sortOrder !== undefined) {
+            dbUpdates.sortorder = updates.sortOrder;
+            delete dbUpdates.sortOrder;
+        }
+
+        await supabase.from('banners').update(dbUpdates).eq('id', id);
         fetchBanners();
     };
 

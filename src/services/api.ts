@@ -1,6 +1,6 @@
 
 import { supabase } from './supabase';
-import { Project, Builder } from '../types';
+import { Project, Builder, ProjectConfiguration } from '../types';
 
 const PAGE_SIZE = 10;
 
@@ -100,7 +100,7 @@ export const api = {
 
         // Keep create/update/delete for admin mostly unchanged, 
         // but can be moved here for consistency.
-        saveConfigurations: async (projectId: string, configs: any[]) => {
+        saveConfigurations: async (projectId: string, configs: Partial<ProjectConfiguration>[]) => {
             if (!configs || configs.length === 0) return;
 
             // Map to ensure projectId is present

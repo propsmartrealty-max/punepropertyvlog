@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from '../../services/supabase';
 // Vercel Force Update
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { useData } from '../../context/DataContext';

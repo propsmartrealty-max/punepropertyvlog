@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { useData } from '../../context/DataContext';
@@ -56,9 +57,10 @@ const AdminLocalities = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['localities'] });
             resetForm();
+            toast.success('Locality saved successfully');
         },
         onError: (err: any) => {
-            alert("Error saving locality: " + err.message);
+            toast.error("Error saving locality: " + err.message);
         }
     });
 
@@ -134,10 +136,24 @@ const AdminLocalities = () => {
                             </div>
 
                             <div className="flex gap-2 pt-2">
-                                <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2">
-                                    <Plus className="w-4 h-4" /> {isEditing ? 'Update' : 'Add'}
+                                <button
+                                    type="submit"
+                                    disabled={mutation.isPending}
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {mutation.isPending ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Plus className="w-4 h-4" />
+                                            {isEditing ? 'Update' : 'Add'}
+                                        </>
+                                    )}
                                 </button>
-                                {isEditing && (
+                                {isEditing && !mutation.isPending && (
                                     <button type="button" onClick={resetForm} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200">
                                         Cancel
                                     </button>

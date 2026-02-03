@@ -8,7 +8,7 @@ export const uploadFile = async (file: File, bucket: string = 'website-assets'):
         const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        console.log(`Uploading ${file.name} to bucket ${bucket} as ${filePath}...`);
+
 
         const { error } = await supabase.storage
             .from(bucket)
@@ -29,7 +29,7 @@ export const uploadFile = async (file: File, bucket: string = 'website-assets'):
             .from(bucket)
             .getPublicUrl(filePath);
 
-        console.log(`Upload successful: ${publicUrl}`);
+
         return publicUrl;
     } catch (error: any) {
         console.error('Error uploading file:', error.message || error);
