@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS banners (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     title TEXT,
-    imageUrl TEXT NOT NULL,
+    image_url TEXT NOT NULL,
     link TEXT,
     isActive BOOLEAN DEFAULT true,
     sortOrder INTEGER DEFAULT 0,

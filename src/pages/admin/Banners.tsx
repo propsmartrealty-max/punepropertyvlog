@@ -37,13 +37,15 @@ const AdminBanners = () => {
         const { data, error } = await supabase
             .from('banners')
             .select('*')
-            .order('sortorder', { ascending: true }); // Postgres lowercases unquoted columns
+            .select('*')
+            .order('sortorder', { ascending: true });
 
         if (data) {
             // Map sortorder (db) to sortOrder (state) if needed, or just rely on JS flexibility 
             // type assertion or mapping
             setBanners(data.map((b: any) => ({
                 ...b,
+                imageUrl: b.image_url, // Map from snake_case column
                 sortOrder: b.sortorder || b.sortOrder
             })));
         }
@@ -56,10 +58,10 @@ const AdminBanners = () => {
 
         const { error } = await supabase.from('banners').insert([{
             title: newBanner.title,
-            imageUrl: newBanner.imageUrl,
+            image_url: newBanner.imageUrl, // Map to snake_case column
             link: newBanner.link,
             isActive: newBanner.isActive,
-            sortorder: banners.length // Note: using lowercase column name
+            sortorder: banners.length
         }]);
 
         if (error) {
