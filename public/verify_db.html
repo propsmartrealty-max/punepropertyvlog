@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DB Verification</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        .builder {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .builder img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .meta {
+            font-size: 12px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Database Verification</h1>
+    <p>Fetching directly from Supabase (bypassing React App)...</p>
+    <button onclick="fetchBuilders()">Refresh Data</button>
+    <div id="results">Loading...</div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // CLIENT-SIDE CREDENTIALS (EXPOSED FOR DEBUGGING ONLY - SAFE IF ANON KEY)
+        // I am reading these from the environment or user must paste them if this fails,
+        // but since this is generated file, I'll try to inject what I know or use placeholders.
+        // Actually, fetching from the same domain locally might work if we have a proxy, 
+        // but likely we need the keys. 
+        // I will attempt to read the .env and inject them via the agent logic before writing? 
+        // No, I can't modify the `write_to_file` payload dynamically easily. 
+        // I'll make it ask for keys or try to grab them from the window if possible? No.
+
+        // I'll assume standard Vite env vars usage pattern and inject the keys I found in the previous step 
+        // (verified via inspect logic, but I don't have them in memory).
+        // I'll place placeholders and rely on the user or the `api.ts` logic.
+        // BETTER: I'll make this file Import from the `src`? No, browsers can't import TS.
+
+        // Hardcoding the keys from the previous `inspect_builders_deep.js` run isn't possible as I didn't see them (masked).
+        // I'll rely on the user's browser localstorage if the app saves them? No.
+
+        // I'll write the code to look for .env.local content? No, browser can't read files.
+
+        // Let's use a trick: I'll include input fields for URL/Key and try to pre-fill if I can?
+        // Or better: Just use the `supabase` instance from the console?
+
+        const fetchBuilders = async () => {
+            const url = prompt("Enter Supabase URL (VITE_SUPABASE_URL):", localStorage.getItem('s_url') || '');
+            const key = prompt("Enter Supabase Anon Key (VITE_SUPABASE_ANON_KEY):", localStorage.getItem('s_key') || '');
+
+            if (!url || !key) return;
+
+            localStorage.setItem('s_url', url);
+            localStorage.setItem('s_key', key);
+
+            const { createClient } = supabase;
+            const client = createClient(url, key);
+
+            const { data, error } = await client.from('builders').select('*');
+
+            const results = document.getElementById('results');
+            if (error) {
+                results.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                results.innerHTML = "<p>No builders found.</p>";
+                return;
+            }
+
+            results.innerHTML = data.map(b => `
+                <div class="builder">
+                    <h3>${b.name} <span class="meta">(ID: ${b.id})</span></h3>
+                    <div class="meta">Slug: ${b.slug}</div>
+                    <div class="meta">Trust Score: ${b.trust_score}</div>
+                    <div style="display:flex; gap:20px;">
+                        <div>
+                            <strong>Logo:</strong><br>
+                            ${b.logo ? `<img src="${b.logo}" />` : 'None'}
+                            <div class="meta">${b.logo || 'NULL'}</div>
+                        </div>
+                        <div>
+                            <strong>Hero:</strong><br>
+                            ${b.hero_image ? `<img src="${b.hero_image}" />` : 'None'}
+                            <div class="meta">${b.hero_image || 'NULL'}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        };
+    </script>
+</body>
+
+</html>

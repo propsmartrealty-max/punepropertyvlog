@@ -34,6 +34,8 @@ const BuilderForm = () => {
 
     const [formData, setFormData] = useState<Builder>(initialFormState);
     const [locationInput, setLocationInput] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         if (isEditing && id) {
@@ -51,12 +53,17 @@ const BuilderForm = () => {
         }
     }, [id, isEditing, builders]);
 
-    const [isSaving, setIsSaving] = useState(false);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (isUploading) {
+            toast.error("Please wait for images to finish uploading.");
+            return;
+        }
+
         setIsSaving(true);
         try {
+            console.log("Submitting Builder Data:", formData);
             if (isEditing && id) {
                 await updateBuilder(id, formData);
             } else {
@@ -65,7 +72,7 @@ const BuilderForm = () => {
             navigate('/admin/builders');
         } catch (error: any) {
             console.error("Error saving builder:", error);
-            toast.success('Builder created successfully');
+            toast.error(error.message || 'Failed to save builder');
         } finally {
             setIsSaving(false);
         }
@@ -105,9 +112,12 @@ const BuilderForm = () => {
     return (
         <AdminLayout title={isEditing ? 'Edit Builder' : 'Add New Builder'}>
             <div className="max-w-3xl mx-auto">
-                <button onClick={() => navigate('/admin/builders')} className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <ArrowLeft className="w-4 h-4" /> Back to Builders
-                </button>
+                <div className="flex justify-between items-center mb-6">
+                    <button onClick={() => navigate('/admin/builders')} className="text-slate-500 hover:text-slate-800 flex items-center gap-2">
+                        <ArrowLeft className="w-4 h-4" /> Back to Builders
+                    </button>
+                    {isEditing && <span className="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-1 rounded">ID: {id}</span>}
+                </div>
 
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 space-y-6">
 
@@ -145,6 +155,8 @@ const BuilderForm = () => {
                                 onChange={(val) => setFormData(prev => ({ ...prev, logo: val }))}
                                 placeholder="Upload Logo"
                                 bucket="website-assets"
+                                onUploadStatusChange={setIsUploading}
+                                disabled={isSaving}
                             />
                         </div>
                         <div>
@@ -154,6 +166,8 @@ const BuilderForm = () => {
                                 onChange={(val) => setFormData(prev => ({ ...prev, heroImage: val }))}
                                 placeholder="Upload Hero Image"
                                 bucket="website-assets"
+                                onUploadStatusChange={setIsUploading}
+                                disabled={isSaving}
                             />
                         </div>
                     </div>
@@ -207,10 +221,12 @@ const BuilderForm = () => {
                     <div className="pt-6 border-t border-gray-100 flex justify-end">
                         <button
                             type="submit"
-                            disabled={isSaving}
+                            disabled={isSaving || isUploading}
                             className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-xl flex items-center gap-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            {isSaving ? <React.Fragment><span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> Saving...</React.Fragment> : <React.Fragment><Save className="w-5 h-5" /> Save Builder</React.Fragment>}
+                            {isSaving ? <React.Fragment><span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> Saving...</React.Fragment> :
+                                isUploading ? <React.Fragment><span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> Uploading...</React.Fragment> :
+                                    <React.Fragment><Save className="w-5 h-5" /> Save Builder</React.Fragment>}
                         </button>
                     </div>
 

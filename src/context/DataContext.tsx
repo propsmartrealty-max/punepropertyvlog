@@ -98,9 +98,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const addProjectMutation = useMutation({
         mutationFn: async (project: Project) => {
             const { supabase } = await import('../services/supabase');
+            const { mapProjectToDb } = await import('../utils/mapper');
             const { id, advancedConfigurations, ...data } = project;
             const payload = id.startsWith('p') || id === '' ? data : { ...data, id };
-            const { data: inserted, error } = await supabase.from('projects').insert([payload]).select().single();
+            const dbPayload = mapProjectToDb(payload);
+
+            const { data: inserted, error } = await supabase.from('projects').insert([dbPayload]).select().single();
             if (error) throw error;
             if (advancedConfigurations && advancedConfigurations.length > 0) {
                 await api.projects.saveConfigurations(inserted.id, advancedConfigurations);
@@ -114,8 +117,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const updateProjectMutation = useMutation({
         mutationFn: async ({ id, updates }: { id: string; updates: Partial<Project> }) => {
             const { supabase } = await import('../services/supabase');
+            const { mapProjectToDb } = await import('../utils/mapper');
             const { advancedConfigurations, ...data } = updates;
-            const { error } = await supabase.from('projects').update(data).eq('id', id);
+            const dbPayload = mapProjectToDb(data);
+
+            const { error } = await supabase.from('projects').update(dbPayload).eq('id', id);
             if (error) throw error;
             if (advancedConfigurations) {
                 await api.projects.saveConfigurations(id, advancedConfigurations);
@@ -141,9 +147,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const addBuilderMutation = useMutation({
         mutationFn: async (builder: Builder) => {
             const { supabase } = await import('../services/supabase');
+            const { mapBuilderToDb } = await import('../utils/mapper');
             const { id, ...data } = builder;
             const payload = id.startsWith('b') || id === '' ? data : builder;
-            const { error } = await supabase.from('builders').insert([payload]);
+            const dbPayload = mapBuilderToDb(payload);
+            console.log("Supabase Insert Payload:", dbPayload);
+
+            const { error } = await supabase.from('builders').insert([dbPayload]);
             if (error) throw error;
         },
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['builders'] })
@@ -152,8 +162,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const updateBuilderMutation = useMutation({
         mutationFn: async ({ id, updates }: { id: string; updates: Partial<Builder> }) => {
             const { supabase } = await import('../services/supabase');
-            const { error } = await supabase.from('builders').update(updates).eq('id', id);
+            const { mapBuilderToDb } = await import('../utils/mapper');
+            const dbPayload = mapBuilderToDb(updates);
+            console.log("Supabase UPDATE Payload:", dbPayload);
+
+            const { error, count } = await supabase.from('builders').update(dbPayload).eq('id', id).select('*', { count: 'exact' });
+
             if (error) throw error;
+            if (count === 0) {
+                console.warn("Update affected 0 rows. Possible ID mismatch:", id);
+                // Optional: throw new Error(`Builder with ID ${id} not found.`);
+            }
         },
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['builders'] })
     });

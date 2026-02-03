@@ -1,6 +1,7 @@
 
 import { supabase } from './supabase';
 import { Project, Builder, ProjectConfiguration } from '../types';
+import { mapProjectFromDb, mapBuilderFromDb } from '../utils/mapper';
 
 const PAGE_SIZE = 10;
 
@@ -77,14 +78,16 @@ export const api = {
             const to = from + PAGE_SIZE - 1;
 
             const { data, error, count } = await query
-                .order('createdAt', { ascending: false })
+                .order('created_at', { ascending: false }) // Use snake_case column if renamed, or createdAt if not
                 .range(from, to);
 
             if (error) throw error;
             // Deduplicate projects if multiple configurations matched causing multiple rows?
             // Supabase returns projects, so if one project matches multiple details, it returns one row but with joined data array.
 
-            return { data: data as Project[], count, page, totalPages: Math.ceil((count || 0) / PAGE_SIZE) };
+            const mappedData = (data || []).map(mapProjectFromDb);
+
+            return { data: mappedData as Project[], count, page, totalPages: Math.ceil((count || 0) / PAGE_SIZE) };
         },
 
         getById: async (id: string) => {
@@ -95,7 +98,7 @@ export const api = {
                 .single();
 
             if (error) throw error;
-            return data as Project;
+            return mapProjectFromDb(data) as Project;
         },
 
         // Keep create/update/delete for admin mostly unchanged, 
@@ -126,12 +129,12 @@ export const api = {
             // Builders list is usually smaller, can fetch all for now or paginate if needed.
             const { data, error } = await supabase.from('builders').select('*');
             if (error) throw error;
-            return data as Builder[];
+            return (data || []).map(mapBuilderFromDb) as Builder[];
         },
         getById: async (id: string) => {
             const { data, error } = await supabase.from('builders').select('*').eq('id', id).single();
             if (error) throw error;
-            return data as Builder;
+            return mapBuilderFromDb(data) as Builder;
         }
     }
 };

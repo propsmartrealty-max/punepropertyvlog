@@ -10,6 +10,8 @@ interface ImageUploadProps {
     placeholder?: string;
     className?: string;
     bucket?: string;
+    onUploadStatusChange?: (isUploading: boolean) => void;
+    disabled?: boolean;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -19,13 +21,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     onRemove,
     placeholder = "Click to upload image",
     className = "",
-    bucket = 'website-assets'
+    bucket = 'website-assets',
+    disabled = false
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
+
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -36,6 +41,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         }
 
         setIsProcessing(true);
+        onUploadStatusChange?.(true);
         setError('');
 
         try {
@@ -47,6 +53,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             setError(err.message || 'Failed to upload image. Please try again.');
         } finally {
             setIsProcessing(false);
+            onUploadStatusChange?.(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
@@ -81,16 +88,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 className="hidden"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
+                disabled={disabled}
             />
 
             {!value ? (
                 <div
-                    onClick={() => !isProcessing && fileInputRef.current?.click()}
+                    onClick={() => !isProcessing && !disabled && fileInputRef.current?.click()}
                     className={`
                         border-2 border-dashed border-slate-300 rounded-xl p-6
                         flex flex-col items-center justify-center gap-2
-                        cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 transition-colors
-                        ${isProcessing ? 'opacity-50 pointer-events-none' : ''}
+                        transition-colors
+                        ${isProcessing || disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer hover:border-blue-500 hover:bg-blue-50/50'}
                     `}
                 >
                     {isProcessing ? (
@@ -114,7 +122,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                         <button
                             type="button"
                             onClick={handleRemove}
-                            className="bg-white p-2 rounded-full text-red-600 hover:bg-red-50 shadow-lg transform hover:scale-110 transition-all"
+                            className={`bg-white p-2 rounded-full text-red-600 hover:bg-red-50 shadow-lg transform hover:scale-110 transition-all ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+                            disabled={disabled}
                         >
                             <X className="w-5 h-5" />
                         </button>
