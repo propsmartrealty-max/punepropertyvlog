@@ -13,6 +13,8 @@ interface ImageUploadProps {
     bucket?: string;
     onUploadStatusChange?: (isUploading: boolean) => void;
     disabled?: boolean;
+    altValue?: string;
+    onAltChange?: (val: string) => void;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -24,7 +26,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     className = "",
     bucket = 'website-assets',
     onUploadStatusChange,
-    disabled = false
+    disabled = false,
+    altValue,
+    onAltChange
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -132,22 +136,36 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     </button>
                 </div>
             ) : (
-                <div className="relative group rounded-xl overflow-hidden border border-slate-200">
-                    <img
-                        src={value}
-                        alt="Preview"
-                        className="w-full h-48 object-cover bg-slate-100"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                        <button
-                            type="button"
-                            onClick={handleRemove}
-                            className={`bg-white p-2 rounded-full text-red-600 hover:bg-red-50 shadow-lg transform hover:scale-110 transition-all ${disabled ? 'pointer-events-none opacity-50' : ''}`}
-                            disabled={disabled}
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
+                <div className="space-y-2">
+                    <div className="relative group rounded-xl overflow-hidden border border-slate-200">
+                        <img
+                            src={value}
+                            alt="Preview"
+                            className="w-full h-48 object-cover bg-slate-100"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                            <button
+                                type="button"
+                                onClick={handleRemove}
+                                className={`bg-white p-2 rounded-full text-red-600 hover:bg-red-50 shadow-lg transform hover:scale-110 transition-all ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+                                disabled={disabled}
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
                     </div>
+
+                    {/* Alt Text Input - Only if handler provided */}
+                    {onAltChange && (
+                        <input
+                            type="text"
+                            value={altValue || ''}
+                            onChange={(e) => onAltChange(e.target.value)}
+                            placeholder="Alt Text (SEO Description)"
+                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
+                            disabled={disabled}
+                        />
+                    )}
                 </div>
             )}
 

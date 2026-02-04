@@ -10,6 +10,7 @@ export const mapProjectToDb = (project: Partial<Project>) => {
         exactPrice, priceType, seoKeywords, metaDescription, configurationDetails,
         masterLayout, floorPlans, verificationStatus, pricePerSqft, verificationSource,
         highlights,
+        imageAlt, heroImageAlt, // Destructure
         ...rest
     } = project;
 
@@ -19,6 +20,8 @@ export const mapProjectToDb = (project: Partial<Project>) => {
         price_range: priceRange,
         possession_date: possessionDate,
         hero_image: heroImage,
+        image_alt: imageAlt,
+        hero_image_alt: heroImageAlt,
         rera_id: reraId,
         exact_price: exactPrice,
         price_type: priceType,
@@ -41,6 +44,8 @@ export const mapProjectFromDb = (data: any): Project => {
         priceRange: data.price_range || data.priceRange,
         possessionDate: data.possession_date || data.possessionDate,
         heroImage: data.hero_image || data.heroImage,
+        imageAlt: data.image_alt || data.imageAlt,
+        heroImageAlt: data.hero_image_alt || data.heroImageAlt,
         reraId: data.rera_id || data.reraId,
         exactPrice: data.exact_price || data.exactPrice,
         priceType: data.price_type || data.priceType,
@@ -61,14 +66,17 @@ export const mapProjectFromDb = (data: any): Project => {
 export const mapBuilderToDb = (builder: Partial<Builder>) => {
     const {
         heroImage, establishedYear, totalProjects, ongoingProjects,
-        trustScore, isVerified, logo, // Explicit destructure
+        trustScore, isVerified, logo,
+        logoAlt, heroImageAlt,
         ...rest
     } = builder;
 
     return {
         ...rest,
-        logo: logo, // Explicit mapping
+        logo: logo,
+        logo_alt: logoAlt,
         hero_image: heroImage,
+        hero_image_alt: heroImageAlt,
         established_year: establishedYear,
         total_projects: totalProjects,
         ongoing_projects: ongoingProjects,
@@ -80,9 +88,11 @@ export const mapBuilderToDb = (builder: Partial<Builder>) => {
 export const mapBuilderFromDb = (data: any): Builder => {
     return {
         ...data,
-        id: data.id, // Explicit
-        logo: data.logo, // Explicit (Ensure it's not lost)
+        id: data.id,
+        logo: data.logo,
+        logoAlt: data.logo_alt || data.logoAlt,
         heroImage: data.hero_image || data.heroImage,
+        heroImageAlt: data.hero_image_alt || data.heroImageAlt,
         establishedYear: data.established_year || data.establishedYear,
         totalProjects: data.total_projects || data.totalProjects,
         ongoingProjects: data.ongoing_projects || data.ongoingProjects,

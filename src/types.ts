@@ -39,7 +39,9 @@ export interface Builder {
   name: string;
   slug: string;
   logo: string;
+  logoAlt?: string;
   heroImage: string;
+  heroImageAlt?: string;
   description: string;
   establishedYear: number;
   totalProjects: number;
@@ -69,7 +71,9 @@ export interface Project {
   type: 'Residential' | 'Commercial' | 'Plot'; // New field for categorization
   possessionDate: string;
   image: string;
+  imageAlt?: string;
   heroImage?: string;
+  heroImageAlt?: string;
   lat?: number;
   lng?: number;
   masterLayout?: string;

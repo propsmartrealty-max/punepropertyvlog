@@ -350,6 +350,8 @@ const ProjectForm = () => {
                                     bucket="project-images"
                                     onUploadStatusChange={(status) => handleUploadStatus('image', status)}
                                     disabled={isSaving}
+                                    altValue={formData.imageAlt}
+                                    onAltChange={(val) => setFormData(prev => ({ ...prev, imageAlt: val }))}
                                 />
                                 <ImageUpload
                                     label="Hero / Banner Image"
@@ -359,6 +361,8 @@ const ProjectForm = () => {
                                     bucket="project-images"
                                     onUploadStatusChange={(status) => handleUploadStatus('hero', status)}
                                     disabled={isSaving}
+                                    altValue={formData.heroImageAlt}
+                                    onAltChange={(val) => setFormData(prev => ({ ...prev, heroImageAlt: val }))}
                                 />
                             </div>
 

@@ -163,6 +163,8 @@ const BuilderForm = () => {
                                 bucket="website-assets"
                                 onUploadStatusChange={(status) => handleUploadStatus('logo', status)}
                                 disabled={isSaving}
+                                altValue={formData.logoAlt}
+                                onAltChange={(val) => setFormData(prev => ({ ...prev, logoAlt: val }))}
                             />
                         </div>
                         <div>
@@ -174,6 +176,8 @@ const BuilderForm = () => {
                                 bucket="website-assets"
                                 onUploadStatusChange={(status) => handleUploadStatus('hero', status)}
                                 disabled={isSaving}
+                                altValue={formData.heroImageAlt}
+                                onAltChange={(val) => setFormData(prev => ({ ...prev, heroImageAlt: val }))}
                             />
                         </div>
                     </div>
