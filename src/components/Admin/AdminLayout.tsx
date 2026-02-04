@@ -15,7 +15,6 @@ const AdminLayout: React.FC<{ children: React.ReactNode, title: string }> = ({ c
         } catch (error) {
             console.error("Error signing out:", error);
         }
-        localStorage.removeItem('isAdminAuthenticated');
         navigate('/admin');
     };
 
