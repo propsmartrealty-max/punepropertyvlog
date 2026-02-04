@@ -23,42 +23,35 @@ export const fetchProjectDetailsFromAI = async (query: string): Promise<Partial<
 
     try {
         const prompt = `
-        You are a Database Assistant for a Real Estate Application.
-        Your job is to specific factual data about the following project in Pune, India:
-        "${query}"
+        You are an SEO Expert & Real Estate Analyst for Pune, India.
+        Your job is to generate highly optimized, factual data for the project: "${query}"
 
         RULES:
-        1. **ACCURACY IS PARAMOUNT**. If you do not find the exact RERA ID or Carpet Area, return null or empty string. DO NOT GUESS.
-        2. **RERA ID**: Must start with 'P521' (for Pune) followed by digits. If unsure, omit.
-        3. **PRICING**: Use the most recent 2024/2025 market price.
-        4. **FORMAT**: Return PURE JSON. No markdown.
-        5. **SOURCE TRUTH**: Prioritize data from reliable real estate portals if direct government data is inaccessible.
-
+        1. **ACCURACY PARAMOUNT**: If RERA ID or exact specs are unknown, return null.
+        2. **LONG-TAIL DESCRIPTIONS**: 
+           - The 'description' MUST be written for SEO. 
+           - Pattern: "Premium {configuration} apartments in {location} Pune near {landmark} starting at {price}."
+           - Include "buy", "sale", "price", "possession" naturally.
+        3. **FORMAT**: Return PURE JSON.
+        
         Return this JSON structure:
         {
-            "title": "Exact Official Project Name",
-            "builderId": "Name of the builder (string)",
-            "location": "Specific Micro-Location (e.g. 'Baner Annex', 'Kharadi', 'Wakad'). Avoid generic 'Pune'.",
-            "priceRange": "e.g. ₹85L - ₹1.2Cr (Market Estimate)",
-            "exactPrice": "Starting Price (e.g. ₹87.5 Lakhs)",
+            "title": "Official Project Name",
+            "builderId": "Builder Name",
+            "location": "Specific Area (e.g. Baner, Kharadi)",
+            "priceRange": "e.g. ₹95L - ₹1.5Cr (Current Market Price)",
+            "exactPrice": "Starting Price e.g. ₹95 Lakhs",
             "configurations": ["2 BHK", "3 BHK"], 
-            "status": "Under Construction", 
+            "status": "Under Construction / New Launch",
+            "possessionDate": "e.g. December 2027",
             "type": "Residential",
-            "possessionDate": "e.g. Dec 2027",
-            "reraId": "P521000vx... (Return NULL if not explicitly found)",
-            "description": "Professional summary (max 100 words).",
-            "metaDescription": "SEO Description.",
-            "seoKeywords": ["keyword1", "keyword2"],
-            "features": ["Amenity 1", "Amenity 2"],
-            "slug": "project-name-location-pune-official", // e.g. 'godrej-rivergreens-manjari-pune'
-            "advancedConfigurations": [
-                {
-                    "name": "2 BHK Classic",
-                    "carpetArea": 0, // Set to 0 if unknown. DO NOT ESTIMATE.
-                    "basePrice": 0,  // Set to 0 if unknown.
-                    "bathrooms": 2
-                }
-            ]
+            "reraId": "P521....",
+            "description": "2-paragraph SEO description. Paragraph 1: Key configurations, location advantages, and price. Paragraph 2: Amenities and why it is a good investment. Use keywords like 'flats in Pune', 'luxury homes'.",
+            "metaDescription": "Click-inducing summary (max 160 chars). E.g. 'Buy 2/3 BHK in Godrej Rivergreens, Manjari. Price starts ₹55L. Zero Brokerage. Verified RERA P521000.... Check Floor Plans now!'",
+            "seoKeywords": ["2 BHK in {location}", "3 BHK in {location}", "{project_name} price", "{project_name} floor plan", "{project_name} review", "flats near {landmark}"],
+            "features": ["Swimming Pool", "Gym", "Clubhouse", "24x7 Security"],
+            "slug": "{project-name}-{location}-pune-official",
+            "advancedConfigurations": []
         }
         `;
 

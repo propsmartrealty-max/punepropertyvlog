@@ -132,8 +132,22 @@ const ProjectForm = () => {
 
     const [isSaving, setIsSaving] = useState(false);
 
+    // Robust Upload Tracking
+    const [uploadingFields, setUploadingFields] = useState<Record<string, boolean>>({});
+    const isUploading = Object.values(uploadingFields).some(Boolean);
+
+    const handleUploadStatus = (field: string, status: boolean) => {
+        setUploadingFields(prev => ({ ...prev, [field]: status }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (isUploading) {
+            toast.error("Please wait for all images to finish uploading.");
+            return;
+        }
+
         setIsSaving(true);
         try {
             if (isEditing && id) {
@@ -334,6 +348,8 @@ const ProjectForm = () => {
                                     onChange={(val) => setFormData(prev => ({ ...prev, image: val }))}
                                     placeholder="Upload Card Image"
                                     bucket="project-images"
+                                    onUploadStatusChange={(status) => handleUploadStatus('image', status)}
+                                    disabled={isSaving}
                                 />
                                 <ImageUpload
                                     label="Hero / Banner Image"
@@ -341,6 +357,8 @@ const ProjectForm = () => {
                                     onChange={(val) => setFormData(prev => ({ ...prev, heroImage: val }))}
                                     placeholder="Upload Banner Image"
                                     bucket="project-images"
+                                    onUploadStatusChange={(status) => handleUploadStatus('hero', status)}
+                                    disabled={isSaving}
                                 />
                             </div>
 
@@ -351,6 +369,8 @@ const ProjectForm = () => {
                                     onChange={(val) => setFormData(prev => ({ ...prev, masterLayout: val }))}
                                     placeholder="Upload Master Layout"
                                     bucket="project-images"
+                                    onUploadStatusChange={(status) => handleUploadStatus('layout', status)}
+                                    disabled={isSaving}
                                 />
                                 {/* Placeholder for future logo if needed */}
                             </div>
@@ -391,6 +411,8 @@ const ProjectForm = () => {
                                                 setFormData(prev => ({ ...prev, floorPlans: newPlans }));
                                             }}
                                             bucket="project-images"
+                                            onUploadStatusChange={(status) => handleUploadStatus(`floorPlan${i}`, status)}
+                                            disabled={isSaving}
                                         />
                                     </div>
                                 ))}

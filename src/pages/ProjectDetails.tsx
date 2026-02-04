@@ -139,7 +139,7 @@ const ProjectDetails = () => {
     // Dynamic SEO Generator
     const seoTitle = project.title + " " + project.location + " | " + (project.configurations || []).join(', ') + " | Price " + project.priceRange;
     // "Buy 2 BHK, 3 BHK in Baner | Godrej Hillside - Verified RERA P12345"
-    const seoDesc = "Buy " + (project.configurations || []).join(' & ') + " at " + project.title + ", " + project.location + ". " + (project.reraId ? "RERA Verified: " + project.reraId + ". " : "") + "Starting from " + project.priceRange + ". Brochure, Floor Plans & Price Sheet.";
+    const seoDesc = project.metaDescription || ("Buy " + (project.configurations || []).join(' & ') + " at " + project.title + ", " + project.location + ". " + (project.reraId ? "RERA Verified: " + project.reraId + ". " : "") + "Starting from " + project.priceRange + ". Brochure, Floor Plans & Price Sheet.");
 
     // Helper for Tab Classes
     const getTabClass = (section: string) => {

@@ -53,8 +53,12 @@ const AdminBanners = () => {
         setIsLoading(false);
     };
 
+    const [isUploading, setIsUploading] = useState(false);
+
     const handleAddBanner = async () => {
         if (!newBanner.imageUrl) return toast.error("Image is required");
+        if (isUploading) return toast.error("Please wait for upload to finish");
+
         setIsSaving(true);
 
         const { error } = await supabase.from('banners').insert([{
@@ -71,6 +75,7 @@ const AdminBanners = () => {
         } else {
             setNewBanner({ title: '', imageUrl: '', link: '', isActive: true, sortOrder: 0 });
             fetchBanners();
+            toast.success("Banner added successfully!");
         }
         setIsSaving(false);
     };
@@ -155,13 +160,14 @@ const AdminBanners = () => {
                                 value={newBanner.imageUrl}
                                 onChange={(url) => setNewBanner({ ...newBanner, imageUrl: url })}
                                 bucket="website-assets"
+                                onUploadStatusChange={setIsUploading}
                             />
                         </div>
                     </div>
                     <div className="mt-4 flex justify-end">
                         <button
                             onClick={handleAddBanner}
-                            disabled={isSaving || !newBanner.imageUrl}
+                            disabled={isSaving || !newBanner.imageUrl || isUploading}
                             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
                         >
                             {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4" />}
