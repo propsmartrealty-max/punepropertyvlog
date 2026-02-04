@@ -1,18 +1,20 @@
 import { supabase } from './supabase';
+import { compressImage } from '../utils/imageCompression';
 
 export const uploadFile = async (file: File, bucket: string = 'website-assets'): Promise<string> => {
     try {
         if (!file) throw new Error("No file provided for upload");
 
-        const fileExt = file.name.split('.').pop();
+        // Compress Image
+        const compressedFile = await compressImage(file);
+
+        const fileExt = compressedFile.name.split('.').pop();
         const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
         const filePath = `${fileName}`;
 
-
-
         const { error } = await supabase.storage
             .from(bucket)
-            .upload(filePath, file);
+            .upload(filePath, compressedFile);
 
         if (error) {
             console.error("Supabase Storage Upload Error Details:", {

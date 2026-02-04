@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react';
+import { Upload, X, Loader2, Image as ImageIcon, FolderOpen } from 'lucide-react';
 import { uploadFile, deleteFile } from '../../services/storageService';
+import MediaSelectorModal from './MediaSelectorModal';
 
 interface ImageUploadProps {
     label: string;
@@ -22,11 +23,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     placeholder = "Click to upload image",
     className = "",
     bucket = 'website-assets',
+    onUploadStatusChange,
     disabled = false
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
+    const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (disabled) return;
@@ -34,9 +37,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Size check (max 5MB)
+        // Size check (max 5MB - though compression will reduce this anyway)
         if (file.size > 5 * 1024 * 1024) {
-            setError('Image too large (max 5MB)');
+            setError('Image too large (max 5MB input)');
             return;
         }
 
@@ -45,10 +48,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         setError('');
 
         try {
+            // storageService now handles compression automatically!
             const url = await uploadFile(file, bucket);
             onChange(url);
         } catch (err: any) {
-            console.error(err);
             console.error(err);
             setError(err.message || 'Failed to upload image. Please try again.');
         } finally {
@@ -59,20 +62,23 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     };
 
     const handleRemove = async (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent triggering upload click
+        e.stopPropagation();
         if (!value) return;
 
         if (window.confirm('Are you sure you want to remove this image?')) {
             try {
-                await deleteFile(value, bucket);
+                // If it's a supabase URL, try to delete it (optional policy)
+                // But often reused images shouldn't be deleted from storage on form clear
+                // Ideally prompt: "Remove from form" vs "Delete from storage"
+                // For safety in this component, we just clear the Form value
+                // and let the Media Library manage storage deletion.
                 if (onRemove) {
                     onRemove();
                 } else {
                     onChange('');
                 }
             } catch (err) {
-                console.error("Error deleting file", err);
-                // Even if delete fails (e.g. not found), we clear the UI
+                console.error("Error removing", err);
                 onChange('');
             }
         }
@@ -92,24 +98,38 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             />
 
             {!value ? (
-                <div
-                    onClick={() => !isProcessing && !disabled && fileInputRef.current?.click()}
-                    className={`
-                        border-2 border-dashed border-slate-300 rounded-xl p-6
-                        flex flex-col items-center justify-center gap-2
-                        transition-colors
-                        ${isProcessing || disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer hover:border-blue-500 hover:bg-blue-50/50'}
-                    `}
-                >
-                    {isProcessing ? (
-                        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-                    ) : (
-                        <Upload className="w-8 h-8 text-slate-400" />
-                    )}
-                    <p className="text-sm text-slate-500 font-medium">
-                        {isProcessing ? 'Uploading...' : placeholder}
-                    </p>
-                    <p className="text-xs text-slate-400">JPG, PNG (Max 5MB)</p>
+                <div className="flex flex-col gap-2">
+                    {/* Main Drop Zone */}
+                    <div
+                        onClick={() => !isProcessing && !disabled && fileInputRef.current?.click()}
+                        className={`
+                            border-2 border-dashed border-slate-300 rounded-xl p-6
+                            flex flex-col items-center justify-center gap-2
+                            transition-colors
+                            ${isProcessing || disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer hover:border-blue-500 hover:bg-blue-50/50'}
+                        `}
+                    >
+                        {isProcessing ? (
+                            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                        ) : (
+                            <Upload className="w-8 h-8 text-slate-400" />
+                        )}
+                        <p className="text-sm text-slate-500 font-medium">
+                            {isProcessing ? 'Compressing & Uploading...' : placeholder}
+                        </p>
+                        <p className="text-xs text-slate-400">JPG, PNG -&gt; WebP (Auto-Compressed)</p>
+                    </div>
+
+                    {/* Choose from Library Button */}
+                    <button
+                        type="button"
+                        onClick={() => setIsLibraryOpen(true)}
+                        disabled={disabled || isProcessing}
+                        className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                    >
+                        <FolderOpen className="w-4 h-4" />
+                        Select from Library
+                    </button>
                 </div>
             ) : (
                 <div className="relative group rounded-xl overflow-hidden border border-slate-200">
@@ -136,6 +156,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     <X className="w-3 h-3" /> {error}
                 </p>
             )}
+
+            <MediaSelectorModal
+                isOpen={isLibraryOpen}
+                onClose={() => setIsLibraryOpen(false)}
+                onSelect={(url) => {
+                    onChange(url);
+                    // No need to set isProcessing since it's just a string link now
+                }}
+            />
         </div>
     );
 };
