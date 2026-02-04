@@ -3,11 +3,18 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Building2, HardHat, LogOut, FileText, Layout, MapPin, Phone, Image as ImageIcon } from 'lucide-react';
 
+import { supabase } from '../../services/supabase';
+
 const AdminLayout: React.FC<{ children: React.ReactNode, title: string }> = ({ children, title }) => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await supabase.auth.signOut();
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
         localStorage.removeItem('isAdminAuthenticated');
         navigate('/admin');
     };
