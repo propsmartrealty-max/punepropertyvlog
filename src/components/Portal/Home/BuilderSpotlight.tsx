@@ -8,6 +8,22 @@ interface BuilderSpotlightProps {
 }
 
 const BuilderSpotlight: React.FC<BuilderSpotlightProps> = ({ builders }) => {
+    // Track errored images by builder ID
+    const [erroredImages, setErroredImages] = React.useState<Record<string, boolean>>({});
+
+    const handleImageError = (builderId: string) => {
+        setErroredImages(prev => ({ ...prev, [builderId]: true }));
+    };
+
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map(word => word[0])
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+    };
+
     return (
         <section className="py-20 bg-dark-DEFAULT text-white relative overflow-hidden">
 
@@ -26,24 +42,39 @@ const BuilderSpotlight: React.FC<BuilderSpotlightProps> = ({ builders }) => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                    {builders.slice(0, 11).map((builder) => (
-                        <Link to={`/builder/${builder.slug}`} key={builder.id} className="group relative bg-dark-card border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-4 hover:bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/30">
+                    {builders.slice(0, 11).map((builder) => {
+                        const showFallback = !builder.logo || erroredImages[builder.id];
 
-                            {/* Logo Container */}
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center p-3 shadow-lg group-hover:scale-110 transition-transform duration-500 relative">
-                                <img src={builder.logo} alt={builder.name} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" />
+                        return (
+                            <Link to={`/builder/${builder.slug}`} key={builder.id} className="group relative bg-dark-card border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-4 hover:bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/30">
 
-                                {/* Verified Checkmark */}
-                                <div className="absolute -bottom-1 -right-1 bg-green-500 text-white p-1 rounded-full border-2 border-dark-card group-hover:scale-110 transition-transform">
-                                    <CheckCircle2 className="w-3 h-3" />
+                                {/* Logo Container */}
+                                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center p-3 shadow-lg group-hover:scale-110 transition-transform duration-500 relative overflow-hidden">
+                                    {showFallback ? (
+                                        <div className="w-full h-full bg-slate-100 rounded-full flex items-center justify-center">
+                                            <span className="text-xl font-bold text-slate-400">{getInitials(builder.name)}</span>
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={builder.logo}
+                                            alt={builder.name}
+                                            onError={() => handleImageError(builder.id)}
+                                            className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
+                                        />
+                                    )}
+
+                                    {/* Verified Checkmark */}
+                                    <div className="absolute -bottom-1 -right-1 bg-green-500 text-white p-1 rounded-full border-2 border-dark-card group-hover:scale-110 transition-transform">
+                                        <CheckCircle2 className="w-3 h-3" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="text-center">
-                                <h4 className="font-bold text-base md:text-lg mb-1 group-hover:text-white text-slate-200 transition-colors">{builder.name}</h4>
-                            </div>
-                        </Link>
-                    ))}
+                                <div className="text-center">
+                                    <h4 className="font-bold text-base md:text-lg mb-1 group-hover:text-white text-slate-200 transition-colors">{builder.name}</h4>
+                                </div>
+                            </Link>
+                        );
+                    })}
 
                     {/* View All Card */}
                     <Link to="/directory" className="group bg-gradient-to-br from-brand-900/50 to-dark-card border border-brand-500/20 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center gap-4 hover:bg-brand-900/80 transition-all duration-300 hover:-translate-y-2">

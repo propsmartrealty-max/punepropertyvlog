@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../services/supabase';
-import { motion } from 'framer-motion';
-import { ChevronRight, ChevronLeft, MapPin } from 'lucide-react';
+// import { motion } from 'framer-motion';
+// import { ChevronRight, ChevronLeft, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DEFAULT_LOCALITIES = [
@@ -14,7 +14,7 @@ const DEFAULT_LOCALITIES = [
 ];
 
 const LocalityStrip = () => {
-    const scrollRef = useRef<HTMLDivElement>(null);
+    // const scrollRef = useRef<HTMLDivElement>(null); // Removed layout logic
     const [localities, setLocalities] = useState<any[]>(DEFAULT_LOCALITIES);
 
     useEffect(() => {
@@ -40,53 +40,36 @@ const LocalityStrip = () => {
         fetchLocalities();
     }, []);
 
-    const scroll = (direction: 'left' | 'right') => {
-        if (scrollRef.current) {
-            const { current } = scrollRef;
-            const scrollAmount = direction === 'left' ? -300 : 300;
-            current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
-    };
-
     return (
-        <section className="py-12 bg-white relative">
+        <section className="py-16 bg-white relative">
             <div className="max-w-7xl mx-auto px-4">
-                <div className="flex justify-between items-center mb-8">
-                    <div>
-                        <span className="text-accent-500 font-extrabold tracking-widest text-xs uppercase mb-1 block">Explore By Area</span>
-                        <h3 className="text-2xl font-bold text-slate-900">Popular Localities</h3>
-                    </div>
-                    <div className="flex gap-2">
-                        <button onClick={() => scroll('left')} className="p-3 rounded-full bg-white border border-gray-100 shadow-lg hover:bg-brand-50 hover:text-brand-600 transition-all active:scale-95">
-                            <ChevronLeft className="w-5 h-5" />
-                        </button>
-                        <button onClick={() => scroll('right')} className="p-3 rounded-full bg-white border border-gray-100 shadow-lg hover:bg-brand-50 hover:text-brand-600 transition-all active:scale-95">
-                            <ChevronRight className="w-5 h-5" />
-                        </button>
-                    </div>
+                <div className="text-center mb-10">
+                    <span className="text-accent-500 font-extrabold tracking-widest text-xs uppercase mb-1 block">Explore By Area</span>
+                    <h3 className="text-3xl font-bold text-slate-900">Popular Localities</h3>
+                    <div className="w-20 h-1 bg-brand-500 mx-auto mt-4 rounded-full"></div>
                 </div>
 
-                <div
-                    ref={scrollRef}
-                    className="flex gap-5 overflow-x-auto no-scrollbar snap-x pb-8 px-1"
-                >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                     {localities.map((loc) => (
-                        <Link to={`/search?q=${loc.name}`} key={loc.name} className="min-w-[200px] snap-start group cursor-pointer">
-                            {/* Image Container with Gradient Ring */}
-                            <div className="relative p-[3px] rounded-2xl bg-gradient-to-br from-brand-300 via-accent-300 to-brand-300 bg-[length:400%_400%] animate-pulse-slow mb-3 transition-transform hover:-translate-y-1 duration-300">
-                                <div className="relative h-36 rounded-xl overflow-hidden bg-white">
-                                    <img src={loc.image} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
-                                    <div className="absolute bottom-3 left-3 text-white">
-                                        <span className="text-xl font-bold">{loc.name}</span>
+                        <Link to={`/search?q=${loc.name}`} key={loc.name} className="group cursor-pointer">
+                            {/* Card Container */}
+                            <div className="relative rounded-2xl overflow-hidden aspect-[4/5] mb-3 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                                <img
+                                    src={loc.image}
+                                    alt={loc.name}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                                <div className="absolute bottom-4 left-4 text-white">
+                                    <h4 className="text-lg font-bold mb-1">{loc.name}</h4>
+                                    <div className="flex items-center gap-2 text-xs text-white/90">
+                                        <span className="bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">{loc.count} Projects</span>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="px-1">
-                                <div className="flex justify-between items-center">
-                                    <p className="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full inline-block">{loc.price}</p>
-                                    <p className="text-xs text-slate-400 font-medium group-hover:text-brand-500 transition-colors">{loc.count}+ Projects</p>
+                                <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                                    {loc.price}
                                 </div>
                             </div>
                         </Link>
