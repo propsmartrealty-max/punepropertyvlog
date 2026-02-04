@@ -46,7 +46,7 @@ const AdminLocalities = () => {
                     name: vars.name,
                     avgPriceSqft: vars.avgPriceSqft,
                     appreciation_rate: vars.appreciation_rate,
-                    image_url: vars.imageUrl
+                    imageUrl: vars.imageUrl
                 }).eq('id', vars.id);
                 if (error) throw error;
             } else {
@@ -55,7 +55,7 @@ const AdminLocalities = () => {
                     name: vars.name,
                     avgPriceSqft: vars.avgPriceSqft,
                     appreciation_rate: vars.appreciation_rate,
-                    image_url: vars.imageUrl
+                    imageUrl: vars.imageUrl
                 }]);
                 if (error) throw error;
             }
@@ -119,15 +119,7 @@ const AdminLocalities = () => {
                                     bucket="website-assets"
                                 />
                             </div>
-                            {/* Image Upload */}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Locality Image</label>
-                                <ImageUpload
-                                    value={image}
-                                    onChange={setImage}
-                                    bucket="website-assets"
-                                />
-                            </div>
+
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Locality Name</label>
