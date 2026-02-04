@@ -22,19 +22,28 @@ const LocalityStrip = () => {
             const { data } = await supabase
                 .from('localities')
                 .select('*')
-                .eq('isFeatured', true)
-                .order('name');
+                // Remove filter to show maximum localities
+                .order('name')
+                .limit(18);
 
             if (data && data.length > 0) {
-                // Map DB columns to UI shape if needed, or just use as is
+                // Map DB columns to UI shape
                 const mapped = data.map((l, index) => ({
                     name: l.name,
-                    // Try image_url, imageUrl, or fallback to the default list by index/random
                     image: l.image_url || l.imageUrl || DEFAULT_LOCALITIES[index % DEFAULT_LOCALITIES.length].image,
-                    price: l.avgPriceSqft ? `₹${(l.avgPriceSqft / 1000).toFixed(1)}k/sq.ft` : (l.averagePrice || 'N/A'), // Fix price key mapping
+                    price: l.avgPriceSqft ? `₹${(l.avgPriceSqft / 1000).toFixed(1)}k/sq.ft` : (l.averagePrice || 'N/A'),
                     count: l.projectCount || 0
                 }));
-                setLocalities(mapped);
+
+                // Merge with Defaults to prevent leftover blank space
+                // Filter out defaults that are already present in the DB data
+                const existingNames = new Set(mapped.map(m => m.name.toLowerCase()));
+                const defaultsToAdd = DEFAULT_LOCALITIES.filter(d => !existingNames.has(d.name.toLowerCase()));
+
+                // Combine: Real Data First, then Defaults
+                const merged = [...mapped, ...defaultsToAdd];
+
+                setLocalities(merged);
             }
         };
         fetchLocalities();
