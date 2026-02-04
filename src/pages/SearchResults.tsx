@@ -113,7 +113,7 @@ const SearchResults = () => {
                     : "Browse verified real estate listings in Pune."}
                 canonical={locationSlug ? `https://punepropertyvlog.in/flats-in-${locationSlug}` : undefined}
             />
-            <PortalNavbar />
+            <PortalNavbar variant="colored" />
 
             <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 flex-1 w-full">
                 {/* View Toggles & Filters */}

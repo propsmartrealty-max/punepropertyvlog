@@ -10,7 +10,7 @@ const About = () => {
                 title="About Us | Pune Property Vlog"
                 description="Learn about Pune's leading technology-led brokerage free real estate aggregator."
             />
-            <PortalNavbar />
+            <PortalNavbar variant="colored" />
 
             <div className="flex-1 pt-32 pb-12 px-4">
                 <div className="max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-sm border border-slate-100">

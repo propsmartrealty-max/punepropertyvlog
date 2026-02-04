@@ -103,7 +103,7 @@ const Directory = () => {
                 title={view === 'builders' ? "Top Builders in Pune" : "All Property Projects in Pune - Directory"}
                 description="Browse our complete directory of real estate projects, builders, and locations in Pune."
             />
-            <PortalNavbar />
+            <PortalNavbar variant="colored" />
 
             <div className="max-w-7xl mx-auto px-4 pt-28 pb-12">
                 <div className="flex flex-col md:flex-row items-baseline justify-between mb-8">

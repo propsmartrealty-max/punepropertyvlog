@@ -25,7 +25,7 @@ const CompareProjects = () => {
     if (selectedProjects.length === 0) {
         return (
             <div className="min-h-screen bg-slate-50 flex flex-col">
-                <Navbar />
+                <Navbar variant="colored" />
                 <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
                     <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-300">
                         <Building2 className="w-10 h-10" />
@@ -72,7 +72,7 @@ const CompareProjects = () => {
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col">
             <SEO title="Compare Projects | Propsmart Realty" description="Compare top real estate projects in Pune side-by-side." />
-            <Navbar />
+            <Navbar variant="colored" />
 
             <main className="flex-1 pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto w-full">
                 <div className="flex items-center justify-between mb-8">

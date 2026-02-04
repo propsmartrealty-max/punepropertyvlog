@@ -44,7 +44,7 @@ const PostProperty = () => {
                 title="Post Your Property | Pune Property Vlog"
                 description="Sell or Rent your property in Pune with Pune Property Vlog. Free listing for owners."
             />
-            <PortalNavbar />
+            <PortalNavbar variant="colored" />
 
             <div className="flex-1 pt-28 pb-12 px-4">
                 <div className="max-w-2xl mx-auto">

@@ -41,7 +41,7 @@ const Contact = () => {
                 title="Contact Us | Pune Property Vlog"
                 description="Get in touch with us for any queries regarding Pune Real Estate."
             />
-            <PortalNavbar />
+            <PortalNavbar variant="colored" />
 
             <div className="flex-1 pt-32 pb-12 px-4">
                 <div className="max-w-5xl mx-auto">
