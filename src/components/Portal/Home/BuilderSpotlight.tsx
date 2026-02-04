@@ -77,7 +77,7 @@ const BuilderSpotlight: React.FC<BuilderSpotlightProps> = ({ builders }) => {
                     })}
 
                     {/* View All Card */}
-                    <Link to="/directory" className="group bg-gradient-to-br from-brand-900/50 to-dark-card border border-brand-500/20 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center gap-4 hover:bg-brand-900/80 transition-all duration-300 hover:-translate-y-2">
+                    <Link to="/directory?view=builders" className="group bg-gradient-to-br from-brand-900/50 to-dark-card border border-brand-500/20 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center gap-4 hover:bg-brand-900/80 transition-all duration-300 hover:-translate-y-2">
                         <div className="w-16 h-16 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-400 group-hover:bg-brand-500 group-hover:text-white transition-all">
                             <span className="text-2xl font-bold">+</span>
                         </div>

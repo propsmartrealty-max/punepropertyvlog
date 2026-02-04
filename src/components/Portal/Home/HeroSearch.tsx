@@ -38,7 +38,29 @@ const HeroSearch = () => {
                 .order('sortorder');
 
             if (data && data.length > 0) {
-                setHeroImages(data.map(b => b.image_url));
+                // Preload and validate images
+                const validImages: string[] = [];
+
+                // Helper to check if image loads
+                const checkImage = (url: string) => new Promise<boolean>((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = url;
+                });
+
+                // Check all images in parallel
+                const results = await Promise.all(data.map(async (b) => {
+                    const isValid = await checkImage(b.image_url);
+                    return isValid ? b.image_url : null;
+                }));
+
+                // Filter out nulls
+                const filtered = results.filter(url => url !== null) as string[];
+
+                if (filtered.length > 0) {
+                    setHeroImages(filtered);
+                }
             }
         };
         fetchBackgrounds();
