@@ -4,6 +4,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { useData } from '../../context/DataContext';
 import { Edit, Trash2, Plus, MapPin, TrendingUp } from 'lucide-react';
+import ImageUpload from '../../components/Admin/ImageUpload';
 
 const AdminLocalities = () => {
     const { localities, isLoading } = useData();
@@ -15,11 +16,13 @@ const AdminLocalities = () => {
     const [name, setName] = useState('');
     const [avgPrice, setAvgPrice] = useState('');
     const [appreciationRate, setAppreciationRate] = useState('7.5');
+    const [image, setImage] = useState('');
 
     const resetForm = () => {
         setName('');
         setAvgPrice('');
         setAppreciationRate('7.5');
+        setImage('');
         setCurrentLocality(null);
         setIsEditing(false);
     }
@@ -29,6 +32,7 @@ const AdminLocalities = () => {
         setName(locality.name);
         setAvgPrice(locality.avgPriceSqft || '');
         setAppreciationRate(locality.appreciation_rate || '7.5');
+        setImage(locality.image_url || locality.imageUrl || '');
         setIsEditing(true);
     };
 
@@ -41,7 +45,8 @@ const AdminLocalities = () => {
                 const { error } = await supabase.from('localities').update({
                     name: vars.name,
                     avgPriceSqft: vars.avgPriceSqft,
-                    appreciation_rate: vars.appreciation_rate
+                    appreciation_rate: vars.appreciation_rate,
+                    image_url: vars.imageUrl
                 }).eq('id', vars.id);
                 if (error) throw error;
             } else {
@@ -49,7 +54,8 @@ const AdminLocalities = () => {
                 const { error } = await supabase.from('localities').insert([{
                     name: vars.name,
                     avgPriceSqft: vars.avgPriceSqft,
-                    appreciation_rate: vars.appreciation_rate
+                    appreciation_rate: vars.appreciation_rate,
+                    image_url: vars.imageUrl
                 }]);
                 if (error) throw error;
             }
@@ -72,6 +78,10 @@ const AdminLocalities = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['localities'] });
+            toast.success('Locality deleted successfully');
+        },
+        onError: (err: any) => {
+            toast.error("Error deleting locality: " + err.message);
         }
     });
 
@@ -81,7 +91,8 @@ const AdminLocalities = () => {
             id: currentLocality?.id,
             name,
             avgPriceSqft: avgPrice ? Number(avgPrice) : null,
-            appreciation_rate: appreciationRate ? Number(appreciationRate) : 7.5
+            appreciation_rate: appreciationRate ? Number(appreciationRate) : 7.5,
+            imageUrl: image
         });
     };
 
@@ -100,6 +111,24 @@ const AdminLocalities = () => {
                     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm sticky top-6">
                         <h3 className="font-bold text-slate-800 mb-4">{isEditing ? 'Edit Locality' : 'Add New Locality'}</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <ImageUpload
+                                    label="Locality Image"
+                                    value={image}
+                                    onChange={setImage}
+                                    bucket="website-assets"
+                                />
+                            </div>
+                            {/* Image Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Locality Image</label>
+                                <ImageUpload
+                                    value={image}
+                                    onChange={setImage}
+                                    bucket="website-assets"
+                                />
+                            </div>
+
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Locality Name</label>
                                 <input
