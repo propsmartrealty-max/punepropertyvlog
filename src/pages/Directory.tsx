@@ -10,6 +10,57 @@ import { CheckCircle2 } from 'lucide-react';
 
 import PropertyCard from '../components/Portal/PropertyCard';
 
+const BuildersGrid = ({ builders }: { builders: any[] }) => {
+    const [erroredImages, setErroredImages] = React.useState<Record<string, boolean>>({});
+
+    const handleImageError = (builderId: string) => {
+        setErroredImages(prev => ({ ...prev, [builderId]: true }));
+    };
+
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map(word => word[0])
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+    };
+
+    return (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {builders.map((builder) => {
+                const showFallback = !builder.logo || erroredImages[builder.id];
+                return (
+                    <Link to={`/builder/${builder.slug}`} key={builder.id} className="group relative bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center gap-4 hover:border-brand-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                        <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center p-3 overflow-hidden border border-slate-100 group-hover:scale-105 transition-transform relative">
+                            {showFallback ? (
+                                <div className="w-full h-full flex items-center justify-center bg-slate-100 rounded-full">
+                                    <span className="text-xl font-bold text-slate-400">{getInitials(builder.name)}</span>
+                                </div>
+                            ) : (
+                                <img
+                                    src={builder.logo}
+                                    alt={builder.name}
+                                    className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all"
+                                    onError={() => handleImageError(builder.id)}
+                                />
+                            )}
+
+                            <div className="absolute -bottom-1 -right-1 bg-green-500 text-white p-1 rounded-full border-2 border-white">
+                                <CheckCircle2 className="w-3 h-3" />
+                            </div>
+                        </div>
+                        <div className="text-center">
+                            <h4 className="font-bold text-sm md:text-base text-slate-800 group-hover:text-brand-600 transition-colors line-clamp-2">{builder.name}</h4>
+                            <p className="text-xs text-slate-400 mt-1">{builder.totalProjects || 0} Projects</p>
+                        </div>
+                    </Link>
+                );
+            })}
+        </div>
+    );
+};
+
 const Directory = () => {
     const { projects, builders } = useData();
     const [searchParams] = useSearchParams();
@@ -78,37 +129,7 @@ const Directory = () => {
                 </div>
 
                 {view === 'builders' ? (
-                    /* Builders Grid */
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                        {builders.map((builder) => (
-                            <Link to={`/builder/${builder.slug}`} key={builder.id} className="group relative bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center gap-4 hover:border-brand-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center p-3 overflow-hidden border border-slate-100 group-hover:scale-105 transition-transform">
-                                    {builder.logo ? (
-                                        <img
-                                            src={builder.logo}
-                                            alt={builder.name}
-                                            className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all"
-                                            onError={(e) => {
-                                                // Simple inline fallback for Directory
-                                                e.currentTarget.style.display = 'none';
-                                                e.currentTarget.parentElement?.classList.add('fallback-active');
-                                            }}
-                                        />
-                                    ) : null}
-                                    {/* Fallback Text (only visible if img hidden or no logo) */}
-                                    <span className="text-xl font-bold text-slate-400 absolute">{getInitials(builder.name)}</span>
-
-                                    <div className="absolute -bottom-1 -right-1 bg-green-500 text-white p-1 rounded-full border-2 border-white">
-                                        <CheckCircle2 className="w-3 h-3" />
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <h4 className="font-bold text-sm md:text-base text-slate-800 group-hover:text-brand-600 transition-colors line-clamp-2">{builder.name}</h4>
-                                    <p className="text-xs text-slate-400 mt-1">{builder.totalProjects || 0} Projects</p>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                    <BuildersGrid builders={builders} />
                 ) : (
                     /* Projects View */
                     <>

@@ -187,31 +187,43 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
 
+    const contextValue = React.useMemo(() => ({
+        projects: projectsQuery.data?.data || [],
+        builders: buildersQuery.data || [],
+        localities: localitiesQuery.data || [],
+        isLoading: projectsQuery.isLoading || buildersQuery.isLoading || localitiesQuery.isLoading,
+        error: (projectsQuery.error as Error) || (buildersQuery.error as Error) || null,
+
+        compareList,
+        addToCompare,
+        removeFromCompare,
+        clearCompare,
+
+        addProject: (p: Project) => addProjectMutation.mutateAsync(p),
+        updateProject: (id: string, u: Partial<Project>) => updateProjectMutation.mutateAsync({ id, updates: u }),
+        deleteProject: (id: string) => deleteProjectMutation.mutateAsync(id),
+
+        addBuilder: (b: Builder) => addBuilderMutation.mutateAsync(b),
+        updateBuilder: (id: string, u: Partial<Builder>) => updateBuilderMutation.mutateAsync({ id, updates: u }),
+        deleteBuilder: (id: string) => deleteBuilderMutation.mutateAsync(id),
+
+        refreshData: () => {
+            queryClient.invalidateQueries();
+        }
+    }), [
+        projectsQuery.data,
+        buildersQuery.data,
+        localitiesQuery.data,
+        projectsQuery.isLoading,
+        buildersQuery.isLoading,
+        localitiesQuery.isLoading,
+        projectsQuery.error,
+        buildersQuery.error,
+        compareList
+    ]);
+
     return (
-        <DataContext.Provider value={{
-            projects: projectsQuery.data?.data || [],
-            builders: buildersQuery.data || [],
-            localities: localitiesQuery.data || [],
-            isLoading: projectsQuery.isLoading || buildersQuery.isLoading || localitiesQuery.isLoading,
-            error: (projectsQuery.error as Error) || (buildersQuery.error as Error) || null,
-
-            compareList,
-            addToCompare,
-            removeFromCompare,
-            clearCompare,
-
-            addProject: (p) => addProjectMutation.mutateAsync(p),
-            updateProject: (id, u) => updateProjectMutation.mutateAsync({ id, updates: u }),
-            deleteProject: (id) => deleteProjectMutation.mutateAsync(id),
-
-            addBuilder: (b) => addBuilderMutation.mutateAsync(b),
-            updateBuilder: (id, u) => updateBuilderMutation.mutateAsync({ id, updates: u }),
-            deleteBuilder: (id) => deleteBuilderMutation.mutateAsync(id),
-
-            refreshData: () => {
-                queryClient.invalidateQueries();
-            }
-        }}>
+        <DataContext.Provider value={contextValue}>
             {children}
         </DataContext.Provider>
     );
