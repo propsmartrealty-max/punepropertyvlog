@@ -96,7 +96,7 @@ const HeroSearch = () => {
                 <motion.h1
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="text-4xl md:text-6xl font-extrabold text-center mb-4 drop-shadow-2xl leading-tight"
+                    className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-4 drop-shadow-2xl leading-tight"
                 >
                     Discover Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-200 via-white to-brand-200">Dream Universe</span>
                 </motion.h1>

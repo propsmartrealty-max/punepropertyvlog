@@ -31,7 +31,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ project, variant = 'list' }
         // Fallback if useData is not available
     }
     // Use first image or fallback
-    const displayImage = getOptimizedImageUrl(project.image, 600);
+    const initialImage = getOptimizedImageUrl(project.image, 600);
+    const [imgSrc, setImgSrc] = useState(initialImage);
 
     const [showLeadForm, setShowLeadForm] = useState(false);
 
@@ -42,12 +43,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ project, variant = 'list' }
             <div className={`relative overflow-hidden shrink-0 ${isGrid ? 'h-52 w-full' : 'h-52 md:h-full md:w-[40%]'} bg-slate-100`}>
                 <Link to={`/project/${project.slug}`} className="block h-full w-full">
                     <img
-                        src={displayImage}
+                        src={imgSrc}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                         loading="lazy"
-                        onError={(e) => {
-                            e.currentTarget.src = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800';
+                        onError={() => {
+                            setImgSrc('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800');
                         }}
                     />
                     {/* Gradient Overlay */}
