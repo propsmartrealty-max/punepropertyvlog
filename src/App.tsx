@@ -27,6 +27,7 @@ const AdminBanners = React.lazy(() => import('./pages/admin/Banners'));
 const AdminLocalities = React.lazy(() => import('./pages/admin/Localities'));
 const AdminLeads = React.lazy(() => import('./pages/admin/Leads'));
 const AdminSeedData = React.lazy(() => import('./pages/admin/SeedData'));
+const AdminMedia = React.lazy(() => import('./pages/admin/MediaGallery'));
 const CompareProjects = React.lazy(() => import('./pages/CompareProjects'));
 
 const LoadingFallback = () => (
@@ -87,6 +88,8 @@ function App() {
                                         <Route path="/admin/builders/:id" element={<AdminBuilderForm />} />
                                         <Route path="/admin/banners" element={<AdminBanners />} />
                                         <Route path="/admin/localities" element={<AdminLocalities />} />
+
+                                        <Route path="/admin/media" element={<AdminMedia />} />
 
                                         <Route path="/admin/leads" element={<AdminLeads />} />
                                         <Route path="/admin/seed" element={<AdminSeedData />} />

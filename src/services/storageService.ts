@@ -37,6 +37,41 @@ export const uploadFile = async (file: File, bucket: string = 'website-assets'):
     }
 };
 
+export const listFiles = async (bucket: string = 'website-assets', path: string = ''): Promise<{ name: string; url: string; created_at: string; size: number }[]> => {
+    try {
+        const { data, error } = await supabase.storage
+            .from(bucket)
+            .list(path, {
+                limit: 100,
+                offset: 0,
+                sortBy: { column: 'created_at', order: 'desc' },
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        // Generate public URLs for each file
+        return data
+            .filter(file => file.name !== '.emptyFolderPlaceholder') // Filter out placeholders
+            .map(file => {
+                const { data: { publicUrl } } = supabase.storage
+                    .from(bucket)
+                    .getPublicUrl(`${path ? path + '/' : ''}${file.name}`);
+
+                return {
+                    name: file.name,
+                    url: publicUrl,
+                    created_at: file.created_at,
+                    size: file.metadata?.size || 0
+                };
+            });
+    } catch (error: any) {
+        console.error('Error listing files:', error.message || error);
+        throw error;
+    }
+};
+
 export const deleteFile = async (url: string, bucket: string = 'website-assets'): Promise<void> => {
     try {
         // Extract file path from URL
