@@ -24,9 +24,9 @@ const LocalityStrip = () => {
                 .select('*')
                 // Remove filter to show maximum localities
                 .order('name')
-                .limit(18);
+                .limit(6); // Limit to single row
 
-            if (data && data.length > 0) {
+            if (data) {
                 // Map DB columns to UI shape
                 const mapped = data.map((l, index) => ({
                     name: l.name,
@@ -40,8 +40,8 @@ const LocalityStrip = () => {
                 const existingNames = new Set(mapped.map(m => m.name.toLowerCase()));
                 const defaultsToAdd = DEFAULT_LOCALITIES.filter(d => !existingNames.has(d.name.toLowerCase()));
 
-                // Combine: Real Data First, then Defaults
-                const merged = [...mapped, ...defaultsToAdd];
+                // Combine: Real Data First, then Defaults, slice to exactly 6
+                const merged = [...mapped, ...defaultsToAdd].slice(0, 6);
 
                 setLocalities(merged);
             }
