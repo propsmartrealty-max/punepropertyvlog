@@ -57,7 +57,8 @@ const AdminLeads = () => {
 
     useEffect(() => {
         fetchLeads();
-    }, [fetchLeads]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const openDeleteModal = (id: string, name: string) => {
         setDeleteModal({ isOpen: true, id, name });

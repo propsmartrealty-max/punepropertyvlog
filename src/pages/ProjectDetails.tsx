@@ -44,20 +44,31 @@ const generateDynamicDescription = (project: Project, builder?: Builder, localit
     return intro + "\n\n" + configText + "\n\n" + amenitiesText + "\n\n" + locationText + "\n\n" + closing;
 };
 
+const ExpandableText = ({ text }: { text: string }) => {
+    const words = text.split(' ');
+    const isLong = words.length > 100;
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    if (!isLong) return <>{text}</>;
+
+    return (
+        <>
+            {isExpanded ? text : words.slice(0, 100).join(' ') + '...'}
+            <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="inline-block ml-2 text-brand-600 font-bold hover:underline text-sm"
+            >
+                {isExpanded ? 'Read Less' : 'Read More'}
+            </button>
+        </>
+    );
+};
+
 const ProjectDetails = () => {
     const { slug } = useParams<{ slug: string }>();
     const { projects, builders, localities, isLoading, error, refreshData } = useData();
-    const project = projects.find(p => p.slug === slug);
-    const locality = localities.find(l => l.name === project?.location);
-    const localityAvgPrice = locality?.avgPriceSqft || 0;
 
-    // Improved Builder Lookup (Handles UUID vs Name mismatch from seeding)
-    const builder = builders.find(b => b.id === project?.builderId || b.name === project?.builderId);
-
-    const displayDescription = (project && project.description && project.description.length > 800)
-        ? project.description
-        : (project ? generateDynamicDescription(project, builder, locality) : "");
-
+    // --- HOOKS MUST BE AT TOP LEVEL (Before any returns) ---
     const [activeSection, setActiveSection] = useState('overview');
 
     // Lead Form State
@@ -65,7 +76,27 @@ const ProjectDetails = () => {
     const [leadMobile, setLeadMobile] = useState('');
     const [leadEmail, setLeadEmail] = useState('');
 
-    // Moved useEffect to top to avoid conditional hook call warning
+    // Moved from below conditional checks
+    const [showLeadForm, setShowLeadForm] = useState(false);
+    const [leadFormType, setLeadFormType] = useState<'Site Visit' | 'Brochure' | 'Offer'>('Site Visit');
+
+    const openLeadForm = (type: 'Site Visit' | 'Brochure' | 'Offer') => {
+        setLeadFormType(type);
+        setShowLeadForm(true);
+    };
+
+    const project = projects.find(p => p.slug === slug);
+    const locality = localities.find(l => l.name === project?.location);
+    const localityAvgPrice = locality?.avgPriceSqft || 0;
+
+    // Improved Builder Lookup
+    const builder = builders.find(b => b.id === project?.builderId || b.name === project?.builderId);
+
+    const displayDescription = (project && project.description && project.description.length > 800)
+        ? project.description
+        : (project ? generateDynamicDescription(project, builder, locality) : "");
+
+    // Intersection Observer Effect
     useEffect(() => {
         if (!project) return;
 
@@ -76,7 +107,7 @@ const ProjectDetails = () => {
                 }
             });
         }, {
-            rootMargin: '-160px 0px -50% 0px', // Adjusted for new offset
+            rootMargin: '-160px 0px -50% 0px',
             threshold: 0.1
         });
 
@@ -111,14 +142,6 @@ const ProjectDetails = () => {
         );
     }
 
-    const [showLeadForm, setShowLeadForm] = useState(false);
-    const [leadFormType, setLeadFormType] = useState<'Site Visit' | 'Brochure' | 'Offer'>('Site Visit');
-
-    const openLeadForm = (type: 'Site Visit' | 'Brochure' | 'Offer') => {
-        setLeadFormType(type);
-        setShowLeadForm(true);
-    };
-
     if (!project) {
         return (
             <div className="min-h-screen flex flex-col bg-slate-50">
@@ -135,13 +158,11 @@ const ProjectDetails = () => {
     }
 
     // Builder defined at the top
-
-    // Dynamic SEO Generator
+    // Dynamic SEO Generator... (Reuse logic)
     const seoTitle = project.title + " " + project.location + " | " + (project.configurations || []).join(', ') + " | Price " + project.priceRange;
-    // "Buy 2 BHK, 3 BHK in Baner | Godrej Hillside - Verified RERA P12345"
+    // ... rest of logic
     const seoDesc = project.metaDescription || ("Buy " + (project.configurations || []).join(' & ') + " at " + project.title + ", " + project.location + ". " + (project.reraId ? "RERA Verified: " + project.reraId + ". " : "") + "Starting from " + project.priceRange + ". Brochure, Floor Plans & Price Sheet.");
 
-    // Helper for Tab Classes
     const getTabClass = (section: string) => {
         const base = "py-4 px-2 font-semibold text-sm uppercase tracking-wider border-b-2 transition-colors whitespace-nowrap";
         const active = "border-blue-600 text-blue-600";
@@ -149,18 +170,14 @@ const ProjectDetails = () => {
         return base + " " + (activeSection === section ? active : inactive);
     };
 
-    // Sticky Nav Logic
     const scrollToSection = (id: string) => {
         const element = document.getElementById(id);
         if (element) {
-            // Offset: 80px (Navbar) + 60px (Tabs) + 20px (Buffer) = 160px
             const y = element.getBoundingClientRect().top + window.scrollY - 160;
             window.scrollTo({ top: y, behavior: 'smooth' });
             setActiveSection(id);
         }
     };
-
-
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans">
@@ -228,7 +245,7 @@ const ProjectDetails = () => {
                 <img
                     src={getOptimizedImageUrl(project.image, 1200)}
                     alt={project.title}
-                    // @ts-ignore
+                    // @ts-expect-error - fetchPriority is standard but not yet in React 18 types
                     fetchPriority="high"
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -315,25 +332,7 @@ const ProjectDetails = () => {
                         <div className="prose max-w-none text-slate-600 leading-relaxed mb-8">
                             <div>
                                 <p className={`transition-all duration-300 ${!activeSection.includes('overview') ? '' : ''}`}>
-                                    {(() => {
-                                        const words = displayDescription.split(' ');
-                                        const isLong = words.length > 100;
-                                        const [isExpanded, setIsExpanded] = useState(false);
-
-                                        if (!isLong) return displayDescription;
-
-                                        return (
-                                            <>
-                                                {isExpanded ? displayDescription : words.slice(0, 100).join(' ') + '...'}
-                                                <button
-                                                    onClick={() => setIsExpanded(!isExpanded)}
-                                                    className="inline-block ml-2 text-brand-600 font-bold hover:underline text-sm"
-                                                >
-                                                    {isExpanded ? 'Read Less' : 'Read More'}
-                                                </button>
-                                            </>
-                                        );
-                                    })()}
+                                    <ExpandableText text={displayDescription} />
                                 </p>
                             </div>
                         </div>
