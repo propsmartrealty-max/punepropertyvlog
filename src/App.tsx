@@ -47,6 +47,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
 
 import { Toaster } from 'react-hot-toast';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
     return (
@@ -96,6 +97,7 @@ function App() {
                                     <Route path="*" element={<NotFound />} />
                                 </Routes>
                             </React.Suspense>
+                            <SpeedInsights />
                         </Router>
                     </GlobalErrorBoundary>
                 </DataProvider>
