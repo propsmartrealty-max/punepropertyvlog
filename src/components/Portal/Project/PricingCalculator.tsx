@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calculator, Info, CheckCircle2 } from 'lucide-react';
 import { ProjectConfiguration } from '../../../types';
+import { openWhatsApp } from '../../../utils/whatsappUtils';
 
 interface PricingCalculatorProps {
     configurations: ProjectConfiguration[];
@@ -134,7 +135,7 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ configurations })
                 </div>
 
                 <button
-                    onClick={() => window.open(`https://wa.me/917744009295?text=Hi, sending detailed cost sheet enquiry for ${selectedConfig.name} on floor ${floorRise} with price ${formatCurrency(grandTotal)}`, '_blank')}
+                    onClick={() => openWhatsApp(`Hi, sending detailed cost sheet enquiry for ${selectedConfig.name} on floor ${floorRise} with price ${formatCurrency(grandTotal)}`)}
                     className="w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-green-200"
                 >
                     Get Official Cost Sheet (PDF)

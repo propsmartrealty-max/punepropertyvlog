@@ -15,6 +15,7 @@ import { DetailSkeleton, ErrorState } from '../components/UI/LoadingSkeleton';
 import DealBadge from '../components/Portal/DealBadge';
 import PriceTrendChart from '../components/Portal/MarketIntelligence/PriceTrendChart';
 import { getOptimizedImageUrl } from '../utils/imageUtils';
+import { openWhatsApp } from '../utils/whatsappUtils';
 
 
 
@@ -418,7 +419,7 @@ const ProjectDetails = () => {
                                     </div>
                                     <div className="text-right">
                                         <button
-                                            onClick={() => window.open('https://wa.me/917744009295?text=Hi, sending breakdown for ' + (config.type || config) + ' in ' + project.title, '_blank')}
+                                            onClick={() => openWhatsApp('Hi, sending breakdown for ' + (config.type || config) + ' in ' + project.title)}
                                             className="text-blue-600 font-semibold text-sm hover:underline"
                                         >
                                             Price Breakup
@@ -672,7 +673,7 @@ const ProjectDetails = () => {
                                 <button
                                     onClick={() => {
                                         const text = "Hi, I am interested in " + project.title + ". Please share details.\n\nName: " + leadName + "\nMobile: " + leadMobile;
-                                        window.open("https://wa.me/917744009295?text=" + encodeURIComponent(text), '_blank');
+                                        openWhatsApp(text);
                                     }}
                                     className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
                                 >

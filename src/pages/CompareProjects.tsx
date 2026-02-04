@@ -12,6 +12,8 @@ const CompareProjects = () => {
     const { compareList, projects, removeFromCompare, localities, builders } = useData();
     const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
+    import { openWhatsApp } from '../utils/whatsappUtils';
+
     React.useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
         window.addEventListener('resize', handleResize);
@@ -252,7 +254,7 @@ const CompareProjects = () => {
                                     {selectedProjects.map(project => (
                                         <td key={project.id} className="p-4 pl-6 border-r border-slate-100">
                                             <button
-                                                onClick={() => window.open(`https://wa.me/917744009295?text=I want to know more about ${project.title}`, '_blank')}
+                                                onClick={() => openWhatsApp(`I want to know more about ${project.title}`)}
                                                 className="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-brand-200"
                                             >
                                                 Contact Expert

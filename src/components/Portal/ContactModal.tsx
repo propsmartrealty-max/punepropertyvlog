@@ -8,6 +8,8 @@ interface ContactModalProps {
     title: string;
 }
 
+import { getWhatsAppUrl, CONTACT_NUMBER } from '../../utils/whatsappUtils';
+
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, title }) => {
     if (!isOpen) return null;
 
@@ -29,11 +31,11 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, title }) =
                 {/* Content */}
                 <div className="p-6 space-y-4">
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                        <a href="tel:+919876543210" className="flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors text-blue-700">
+                        <a href={`tel:+${CONTACT_NUMBER}`} className="flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors text-blue-700">
                             <Phone className="w-6 h-6 mb-2" />
                             <span className="font-bold text-sm">Call Now</span>
                         </a>
-                        <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-xl transition-colors text-green-700">
+                        <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-xl transition-colors text-green-700">
                             <MessageCircle className="w-6 h-6 mb-2" />
                             <span className="font-bold text-sm">WhatsApp</span>
                         </a>

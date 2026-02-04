@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Loader2, CheckCircle2, Phone, ArrowRight, MessageCircle } from 'lucide-react';
 import { supabase } from '../../services/supabase';
+import { openWhatsApp } from '../../utils/whatsappUtils';
 
 interface LeadFormProps {
     isOpen: boolean;
@@ -76,7 +77,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ isOpen, onClose, type, projectTitle
                         <p className="text-slate-600 mb-6">Your request for <strong>{type}</strong> has been received. Our expert will call you shortly.</p>
                         <div className="flex flex-col gap-3">
                             <button
-                                onClick={() => window.open(`https://wa.me/917744009295?text=Hi, I just inquired about ${projectTitle}. Can we chat?`, '_blank')}
+                                onClick={() => openWhatsApp(`Hi, I just inquired about ${projectTitle}. Can we chat?`)}
                                 className="w-full py-3 rounded-xl bg-[#25D366] text-white font-bold flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-colors shadow-lg shadow-green-200"
                             >
                                 <MessageCircle className="w-5 h-5" /> Chat on WhatsApp
