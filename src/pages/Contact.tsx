@@ -4,6 +4,7 @@ import Footer from '../components/Portal/Footer';
 import SEO from '../components/SEO';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { supabase } from '../services/supabase';
+import { sendLeadEmailNotification } from '../utils/emailUtils';
 
 const Contact = () => {
     const [submitted, setSubmitted] = useState(false);
@@ -26,6 +27,9 @@ const Contact = () => {
 
         try {
             const { error } = await supabase.from('leads').insert([data]);
+            if (error) throw error;
+
+            await sendLeadEmailNotification(data);
             if (error) throw error;
             setSubmitted(true);
         } catch (err) {

@@ -6,13 +6,13 @@ import Navbar from '../components/Portal/Navbar';
 import Footer from '../components/Portal/Footer';
 import SEO from '../components/SEO';
 import { useData } from '../context/DataContext';
+import { openWhatsApp } from '../utils/whatsappUtils';
 
 const CompareProjects = () => {
     const navigate = useNavigate();
     const { compareList, projects, removeFromCompare, localities, builders } = useData();
     const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
-    import { openWhatsApp } from '../utils/whatsappUtils';
 
     React.useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);

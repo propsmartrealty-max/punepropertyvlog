@@ -27,14 +27,14 @@ export const fetchProjectDetailsFromAI = async (query: string): Promise<Partial<
         Your job is to generate highly optimized, factual data for the project: "${query}"
 
         RULES:
-        1. **ACCURACY PARAMOUNT**: If RERA ID or exact specs are unknown, return null.
+        1. **ACCURACY PARAMOUNT**: If RERA ID or exact specs are unknown, return null for those fields.
         2. **LONG-TAIL DESCRIPTIONS**: 
            - The 'description' MUST be written for SEO. 
            - Pattern: "Premium {configuration} apartments in {location} Pune near {landmark} starting at {price}."
            - Include "buy", "sale", "price", "possession" naturally.
-        3. **FORMAT**: Return PURE JSON.
-        
-        Return this JSON structure:
+        3. **STRICT JSON ONLY**: You MUST return a single, valid JSON object. Do NOT wrap it in backticks, code blocks, or markdown. Do NOT add any conversational text before or after the JSON.
+
+        Return this exact JSON structure:
         {
             "title": "Official Project Name",
             "builderId": "Builder Name",

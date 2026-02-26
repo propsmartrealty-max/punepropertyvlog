@@ -3,6 +3,7 @@ import PortalNavbar from '../components/Portal/Navbar';
 import Footer from '../components/Portal/Footer';
 import SEO from '../components/SEO';
 import { Building2, Send, CheckCircle } from 'lucide-react';
+import { sendLeadEmailNotification } from '../utils/emailUtils';
 
 const PostProperty = () => {
     const [submitted, setSubmitted] = useState(false);
@@ -31,6 +32,9 @@ const PostProperty = () => {
                 console.error('Supabase error:', error);
                 throw error;
             }
+
+            await sendLeadEmailNotification(data);
+
             setSubmitted(true);
         } catch (err) {
             alert('Failed to submit. Please check your connection or try again.');

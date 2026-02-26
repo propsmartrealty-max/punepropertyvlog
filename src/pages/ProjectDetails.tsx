@@ -246,7 +246,6 @@ const ProjectDetails = () => {
                 <img
                     src={getOptimizedImageUrl(project.image, 1200)}
                     alt={project.title}
-                    // @ts-expect-error - fetchPriority is standard but not yet in React 18 types
                     fetchPriority="high"
                     className="w-full h-full object-cover"
                     onError={(e) => {

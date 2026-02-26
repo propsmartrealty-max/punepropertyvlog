@@ -166,13 +166,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const dbPayload = mapBuilderToDb(updates);
             console.log("Supabase UPDATE Payload:", dbPayload);
 
-            const { error, count } = await supabase.from('builders').update(dbPayload).eq('id', id).select('*', { count: 'exact' });
+            const { error } = await supabase.from('builders').update(dbPayload).eq('id', id);
 
             if (error) throw error;
-            if (count === 0) {
-                console.warn("Update affected 0 rows. Possible ID mismatch:", id);
-                // Optional: throw new Error(`Builder with ID ${id} not found.`);
-            }
         },
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['builders'] })
     });

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Loader2, CheckCircle2, Phone, ArrowRight, MessageCircle } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import { openWhatsApp } from '../../utils/whatsappUtils';
+import { sendLeadEmailNotification } from '../../utils/emailUtils';
 
 interface LeadFormProps {
     isOpen: boolean;
@@ -26,12 +27,16 @@ const LeadForm: React.FC<LeadFormProps> = ({ isOpen, onClose, type, projectTitle
         setStatus('submitting');
 
         try {
-            await supabase.from('leads').insert([{
+            // Auto-tagging logic based on standard budget/type could go here. 
+            // Since LeadForm doesn't capture budget, we just ensure status is 'New'.
+
+            const insertData = {
                 name: formData.name,
                 mobile: formData.mobile,
                 email: formData.email,
                 type: type,
                 project_id: projectId, // Can be ID or Slug
+                status: 'New',
                 metadata: {
                     source: window.location.pathname,
                     project: projectTitle,
@@ -40,7 +45,12 @@ const LeadForm: React.FC<LeadFormProps> = ({ isOpen, onClose, type, projectTitle
                     utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign'),
                     utm_term: new URLSearchParams(window.location.search).get('utm_term')
                 }
-            }]);
+            };
+
+            await supabase.from('leads').insert([insertData]);
+
+            // Send Email Notification via Web3Forms
+            await sendLeadEmailNotification(insertData);
 
             setStatus('success');
             // Auto-close after 2 seconds

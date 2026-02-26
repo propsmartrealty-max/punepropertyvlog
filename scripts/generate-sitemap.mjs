@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { SitemapStream, streamToPromise } from 'sitemap';
+import { SitemapStream } from 'sitemap';
 import { createWriteStream } from 'fs';
 import { resolve } from 'path';
 import 'dotenv/config';
@@ -102,7 +102,12 @@ async function generateSitemap() {
     }
 
     smStream.end();
-    await streamToPromise(smStream);
+
+    await new Promise((resolve, reject) => {
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
+    });
+
     console.log("✅ Sitemap generated at public/sitemap.xml");
 }
 
