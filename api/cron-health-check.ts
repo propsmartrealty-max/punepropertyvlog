@@ -45,7 +45,7 @@ export default async function handler(request: any, response: any) {
     try {
         console.log('🔄 Starting Database Asset Health Check via Cron...');
 
-        const { data: projects, error } = await supabase.from('projects').select('id, title, image, hero_image, master_layout, logo, floor_plans');
+        const { data: projects, error } = await supabase.from('projects').select('id, title, image, hero_image, master_layout, floor_plans');
         if (error) throw error;
 
         let brokenMains = 0;
@@ -77,7 +77,6 @@ export default async function handler(request: any, response: any) {
 
             await checkAdditionalImg(project.hero_image, 'Hero Image');
             await checkAdditionalImg(project.master_layout, 'Master Layout');
-            await checkAdditionalImg(project.logo, 'Logo');
 
             // Check floor plans
             if (project.floor_plans && Array.isArray(project.floor_plans)) {
